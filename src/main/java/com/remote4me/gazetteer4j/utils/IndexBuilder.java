@@ -41,10 +41,10 @@ public class IndexBuilder {
     }
 
     /**
-     * Build the gazetteer4j index line by line
+     * Build the com.remote4me.gazetteer4j index line by line
      *
      * @param geonamesFile
-     *            path of the gazetteer4j file
+     *            path of the com.remote4me.gazetteer4j file
      * @param indexDirectoryPath
      *            path to the created Lucene index directory.
      * @throws IOException when something went wrong

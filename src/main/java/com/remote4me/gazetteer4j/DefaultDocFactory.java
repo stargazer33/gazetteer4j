@@ -79,9 +79,9 @@ public class DefaultDocFactory implements DocFactory {
 
 
     /**
-     * Index gazetteer4j's one line data by built-in Lucene Index functions
+     * Index com.remote4me.gazetteer4j's one line data by built-in Lucene Index functions
      *
-     *            a line from the gazetteer4j file
+     *            a line from the com.remote4me.gazetteer4j file
      */
     @Override
     public Document createFromLineInGeonamesFile(String[] tokens)

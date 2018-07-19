@@ -7,9 +7,9 @@ import java.io.IOException;
 /**
  * Created by dima2 on 15.07.18.
  */
-public class TestBuildIndex {
+public class BuildIndex {
 
-    public void test1() throws IOException {
+    public void doBuild() throws IOException {
         new CompositeIndexBuilder().buildIndex();
     }
 

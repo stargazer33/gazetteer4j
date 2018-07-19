@@ -57,7 +57,7 @@ public class CmdLine {
 
         if (line.hasOption("help")) {
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("lucene-geo-gazetteer4j", options);
+            formatter.printHelp("lucene-geo-com.remote4me.gazetteer4j", options);
             return;
         }
 

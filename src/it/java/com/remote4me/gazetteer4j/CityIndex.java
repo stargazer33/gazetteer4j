@@ -28,7 +28,7 @@ import org.junit.Before;
 import java.io.IOException;
 import java.util.List;
 
-public class TestCityIndex {
+public class CityIndex {
 
     private TextSearcherLucene resolver;
 

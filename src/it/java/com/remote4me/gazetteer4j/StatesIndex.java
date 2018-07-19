@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by dima2 on 14.07.18.
  */
-public class TestStatesIndex {
+public class StatesIndex {
     private TextSearcherLucene resolver;
 
     @Before
