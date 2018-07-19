@@ -188,6 +188,37 @@
                 </executions>
             </plugin>
 
+            <!--
+            The Nexus Staging Maven Plugin is the recommended way to deploy your components to OSSRH and release them to the Central Repository.
+            -->
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+
+            <!--
+            The Maven Release Plugin can be used to automate the changes to the Maven POM files, sanity checks, the SCM operations required and the actual deployment execution.
+            The configuration for the Maven release plugin should include disabling the release profile that is part of the Maven Super POM, since we are using our own profile, and specify the deploy goal together with the activation of our release profile
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
+                    <goals>deploy</goals>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
   <!--
