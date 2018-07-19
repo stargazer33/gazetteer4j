@@ -5,7 +5,7 @@
 
     <groupId>com.remote4me</groupId>
     <artifactId>gazetteer4j</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
 
@@ -29,9 +29,13 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com:stargazer33/gazetteer4j.git</connection>
-        <developerConnection>scm:git:ssh://github.com:stargazer33/gazetteer4j.git</developerConnection>
+        <connection>scm:git:git@github.com:stargazer33/gazetteer4j.git</connection>
+        <developerConnection>scm:git:git@github.com:stargazer33/gazetteer4j.git</developerConnection>
+        <!--
+        <developerConnection>scm:git:ssh://github.com/stargazer33/gazetteer4j.git</developerConnection>
+        -->
         <url>https://github.com/stargazer33/gazetteer4j/tree/master</url>
+    <tag>HEAD</tag>
   </scm>
 
     <distributionManagement>
