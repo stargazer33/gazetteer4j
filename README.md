@@ -7,9 +7,7 @@ Offline geographical directory (gazetteer) implemented as Java lib. Based on Geo
 ## Features
 
 ### Address resolving (convert ambiguous addresses/place name to city,state,country) 
-The idea is to convert all the ambiguous addresses to the `<city>,[state,]<country>` format.
-
-A few examples of address resolving:
+The idea is to convert all the ambiguous addresses to the `<city>,[state,]<country>` format. A few examples of address resolving:
 
 | Ambiguous address |Address in proper format | Comment             |
 | ------------------|---------------------------- |-------------------- |
