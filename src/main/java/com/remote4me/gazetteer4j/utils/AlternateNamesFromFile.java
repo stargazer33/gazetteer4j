@@ -43,8 +43,18 @@ public class AlternateNamesFromFile {
                 }
             );
         }
-
+        addCustomNames();
         LOG.log(Level.INFO, "Reading Finished");
+    }
+
+    private void addCustomNames() {
+        AlternateNameRecord record;
+
+        record = idToRecordMap.get(6252001);
+        record.names.add("USA");
+
+        record = idToRecordMap.get(5128581);
+        record.names.add("NYC");
     }
 
     private void processOneLine(String[] tokens) throws IOException {
@@ -69,10 +79,7 @@ public class AlternateNamesFromFile {
             return;
         }
 
-        if (isolanguage.equals("en") && (
-                isPreferredName.contains("1") || isShortName.contains("1"))
-                )
-        {
+        if (isolanguage.equals("en")){
             AlternateNameRecord record = idToRecordMap.get(id);
             if (record == null) {
                 record = new AlternateNameRecord();
@@ -85,6 +92,7 @@ public class AlternateNamesFromFile {
             if (isShortName.contains("1")) {
                 record.shortName = alternateName;
             }
+            record.names.add(alternateName);
         }
     }
 

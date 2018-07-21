@@ -27,6 +27,9 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.queryparser.flexible.core.builders.QueryBuilder;
+import org.apache.lucene.queryparser.simple.SimpleQueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -51,7 +54,7 @@ import java.util.logging.Logger;
  */
 public class TextSearcherLucene implements TextSearcher {
 
-    private MultiFieldQueryParser queryParser;
+    private QueryParser queryParser;
 
     private IndexSearcher indexSearcher;
 
@@ -68,6 +71,9 @@ public class TextSearcherLucene implements TextSearcher {
     public static final String FIELD_NAME_NAME = "name";
     public static final String FIELD_NAME_OFFICIAL = "official";
     public static final String FIELD_NAME_ALTERNATE_NAMES = "alternatenames";
+    public static final String FIELD_NAME_ALTERNATE_NAMES_BIG = "alternatenamesBig";
+    public static final String FIELD_NAME_COMBINTATIONS = "combinationsa";
+
     public static final String FIELD_NAME_FEATURE_CODE = "featureCode";
     public static final String FIELD_NAME_FEATURE_COMBINED = "featureCombined";
     public static final String FIELD_NAME_COUNTRY_CODE = "countryCode";
@@ -100,15 +106,18 @@ public class TextSearcherLucene implements TextSearcher {
 
         Map<String, Float> boosts = new HashMap<>();
         boosts.put(FIELD_NAME_NAME, (float) 1000);
-        boosts.put(FIELD_NAME_ALTERNATE_NAMES, (float) 0.1);
+        boosts.put(FIELD_NAME_ALTERNATE_NAMES, (float) 1);
+        boosts.put(FIELD_NAME_COMBINTATIONS, (float) 0.1);
         queryParser = new MultiFieldQueryParser(
                 new String[]{
                         FIELD_NAME_NAME,
-                        FIELD_NAME_ALTERNATE_NAMES
+                        FIELD_NAME_ALTERNATE_NAMES_BIG,
+                        FIELD_NAME_COMBINTATIONS
                 },
                 analyzer,
                 boosts
             );
+        queryParser.setDefaultOperator(QueryParser.Operator.OR);
         indexSearcher = new IndexSearcher(createIndexReader(indexPath));
     }
 
@@ -137,17 +146,15 @@ public class TextSearcherLucene implements TextSearcher {
         try {
             //query is wrapped in additional quotes (") to avoid query tokenization on space
             q = queryParser.parse(String.format("\"%s\"", locationQuery));
-
             hitsArray = indexSearcher.search(q, numHits).scoreDocs;
 
-            /*
             // this has side effects - US states returned instead of cities in many cases
-            if(hitsArray.length == 0){
+            if(hitsArray.length == 0 && locationQuery.length() > 1){
                 // try again, with more broad criteria - without double quotes
                 q = queryParser.parse(locationQuery);
                 hitsArray = indexSearcher.search(q, numHits).scoreDocs;
             }
-            */
+
         }
         catch (ParseException e) {
             throw new IOException(e);

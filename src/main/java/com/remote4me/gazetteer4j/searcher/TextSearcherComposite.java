@@ -50,6 +50,7 @@ public class TextSearcherComposite implements TextSearcher {
                 new AltNamesFilter()
         );
 
+
         TextSearcherLucene states = new TextSearcherLucene(
                 INDEX_STATES,
                 new StandardAnalyzer(),

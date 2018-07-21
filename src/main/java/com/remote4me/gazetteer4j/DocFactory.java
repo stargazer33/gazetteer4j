@@ -20,12 +20,13 @@ public interface DocFactory {
     /**
      * @param lineFromFile each element - a column in a line from Geonames file
      * @param idToAlternateMap
-     * @return new Lucene Document instance created from lineFromFile; never null
+     * @param adm1ToIdMap
+     * @param countryToIdMap @return new Lucene Document instance created from lineFromFile; never null
      * @throws IOException when something went wrong
      */
     Document createFromLineInGeonamesFile(
             String[] lineFromFile,
-            Map<Integer, AlternateNameRecord> idToAlternateMap) throws IOException;
+            Map<Integer, AlternateNameRecord> idToAlternateMap, Map<String, Location> adm1ToIdMap, Map<String, Location> countryToIdMap) throws IOException;
 
     /**
      * @param lineFromFile one line from main Geonames file

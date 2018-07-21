@@ -19,7 +19,7 @@ public class AltNamesFilter implements ResultFilter {
     private static final int WEIGHT_SORT_ORDER = 20;
     private static final int WEIGHT_SIZE_ALT_NAME = 50;
     private static final int WEIGHT_NAME_MATCH = 20000;
-    private static final int WEIGHT_NAME_EXACT_MATCH = 20500; // must be higher than WEIGHT_NAME_MATCH
+    private static final int WEIGHT_NAME_EXACT_MATCH = 22000; // must be higher than WEIGHT_NAME_MATCH
     private static final int WEIGHT_NAME_PART_MATCH = 15000;
 
     /**
@@ -64,6 +64,10 @@ public class AltNamesFilter implements ResultFilter {
             else if (resolvedName.contains(query)) {
                 // Assign a weight as per configuration if extracted name is found partly in name
                 weight = WEIGHT_NAME_PART_MATCH;
+            }
+
+            if(!candidateLoc.getFeatureCombined().startsWith("P")){
+                weight -= 3500; // prefer cities
             }
 
             // get all alternate names of candidateLoc

@@ -12,7 +12,7 @@ public class IT {
 
     @Test
     public void bigTest() throws IOException, ParseException {
-        new BuildIndex().doBuild();
+        //new BuildIndex().doBuild();
 
         CompositeSearcher searcher=new CompositeSearcher();
         searcher.setUp();

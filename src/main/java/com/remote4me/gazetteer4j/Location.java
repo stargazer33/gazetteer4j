@@ -17,11 +17,14 @@
 
 package com.remote4me.gazetteer4j;
 
+import java.util.List;
+
 /**
  * A record from main Geonames *.txt file (like allCountries.txt, cities15000.txt)
  */
 public class Location {
 
+    private int id;
     private String name;
     private String officialName;
     private String countryCode;
@@ -31,10 +34,18 @@ public class Location {
     private String featureCombined;
 
     private transient String alternateNames;
+    private transient List<String> alternateNamesList;
     private transient int weight;
 
     public static final Double OUT_OF_BOUNDS = 999999.0;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -124,4 +135,11 @@ public class Location {
         return featureCombined.substring(0,3);
     }
 
+    public void setAlternateNamesList(List<String> alternateNamesList) {
+        this.alternateNamesList = alternateNamesList;
+    }
+
+    public List<String> getAlternateNamesList() {
+        return alternateNamesList;
+    }
 }

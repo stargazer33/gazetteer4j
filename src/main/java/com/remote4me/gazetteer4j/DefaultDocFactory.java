@@ -1,16 +1,12 @@
 package com.remote4me.gazetteer4j;
 
 import com.remote4me.gazetteer4j.searcher.TextSearcherLucene;
-import com.remote4me.gazetteer4j.utils.AlternateNamesFromFile;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.TextField;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -38,6 +34,13 @@ public class DefaultDocFactory implements DocFactory {
     public static final Set FEATURES_ADM1 = new HashSet<>(Arrays.asList(
             "A.ADM1"
     ));
+
+    public static final Set FEATURES_CITIES_COUNTRIES_ADM1 = new HashSet();
+    static {
+        FEATURES_CITIES_COUNTRIES_ADM1.addAll(FEATURES_CITIES);
+        FEATURES_CITIES_COUNTRIES_ADM1.addAll(FEATURES_COUNTRIES);
+        FEATURES_CITIES_COUNTRIES_ADM1.addAll(FEATURES_ADM1);
+    }
 
     public static Function<String[], Boolean> LOAD_ALL_FUNCTION = new Function<String[], Boolean>() {
         @Override
@@ -82,15 +85,17 @@ public class DefaultDocFactory implements DocFactory {
 
     /**
      * Create Lucene Document from input
-     *
      * @param tokens
      * @param idToAlternateMap
+     * @param adm1ToIdMap
+     * @param countryToIdMap
      */
     @Override
     public Document createFromLineInGeonamesFile(
             String[] tokens,
-            Map<Integer, AlternateNameRecord> idToAlternateMap
-    )
+            Map<Integer, AlternateNameRecord> idToAlternateMap,
+            Map<String, Location> adm1ToIdMap,
+            Map<String, Location> countryToIdMap)
     {
 
         int ID = Integer.parseInt(tokens[0]);
@@ -128,52 +133,65 @@ public class DefaultDocFactory implements DocFactory {
         String combinedFeature = featureClass + "."+featureCode;
 
         String nameOfficial = name;
-
+        StringBuilder combinations = new StringBuilder();
         AlternateNameRecord alternate = idToAlternateMap.get(ID);
+        List<String> alternateNamesList;
         if(alternate!=null){
-            /*
-            if(alternate.preferredName != null){
-                nameOfficial = alternate.preferredName;
-            }
-            */
+            alternateNamesList = alternate.names;
             if(alternate.shortName != null){
                 name = alternate.shortName;
             }
         }
-        alternatenames = alternatenames + "," + name + " "+countryCode;
-        if(admin1Code != null && !admin1Code.equals("")){
-            alternatenames = alternatenames + "," + name + " "+admin1Code;
+        else {
+            alternateNamesList = Arrays.asList(alternatenames.split(","));
         }
 
-        /*
-        // hack begin
-        if(countryCode.equals("US")){
-            if(combinedFeature.startsWith("P.")) {
-                if (name.endsWith(" City")) {
-                    if (!alternatenames.contains(name)) {
-                        // append it as alternate
-                        alternatenames = name + "," + alternatenames;
-                    }
-                    // cut off " City"
-                    name = name.substring(0, name.lastIndexOf(" City"));
-                }
-                alternatenames = alternatenames + "," + nameOfficial + " " + admin1Code;
-                if (!nameOfficial.equals(name)) {
-                    alternatenames = alternatenames + "," + name + " " + admin1Code;
+        StringBuilder alternatenamesBig=new StringBuilder(alternatenames);
+
+
+        Location coutryLoc=countryToIdMap.get(countryCode);
+        if(coutryLoc != null ) {
+            appendToBuilder(alternatenamesBig, name, countryCode);
+            appendToBuilder(alternatenamesBig, name, coutryLoc.getName());
+            appendToBuilder(alternatenamesBig, name, coutryLoc.getOfficialName());
+            if(coutryLoc.getAlternateNamesList()!=null) {
+                for (String altCountry : coutryLoc.getAlternateNamesList()) {
+                    appendToBuilder(alternatenamesBig, name, altCountry);
                 }
             }
+
+            // combinations
+            for (String altName : alternateNamesList) {
+                appendToBuilder(combinations, altName, countryCode);
+                appendToBuilder(combinations, altName, coutryLoc.getName());
+            }
         }
-        else {
-            alternatenames = alternatenames + "," + name + " "+countryCode;
+
+        Location adm1Loc = adm1ToIdMap.get(countryCode+"."+admin1Code);
+        if(adm1Loc!=null){
+            appendToBuilder(alternatenamesBig, name, admin1Code);
+            appendToBuilder(alternatenamesBig, name, adm1Loc.getName());
+            appendToBuilder(alternatenamesBig, name, adm1Loc.getOfficialName());
+            if(adm1Loc.getAlternateNamesList()!=null){
+                for (String altAdm1 : adm1Loc.getAlternateNamesList()) {
+                    appendToBuilder(alternatenamesBig, name, altAdm1);
+                }
+            }
+
+            // combinations
+            for (String altName : alternateNamesList) {
+                appendToBuilder(combinations, altName, admin1Code);
+                appendToBuilder(combinations, altName, adm1Loc.getName());
+            }
         }
-        // hack end
-        */
 
         Document doc = new Document();
         doc.add(new IntField(TextSearcherLucene.FIELD_NAME_ID, ID, Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_NAME, name, Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_OFFICIAL, nameOfficial, Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ALTERNATE_NAMES, alternatenames, Field.Store.YES));
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ALTERNATE_NAMES_BIG, alternatenamesBig.toString(), Field.Store.YES));
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMBINTATIONS, combinations.toString(), Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_FEATURE_CODE, featureCode, Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_FEATURE_COMBINED, combinedFeature, Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COUNTRY_CODE, countryCode, Field.Store.YES));
@@ -187,6 +205,13 @@ public class DefaultDocFactory implements DocFactory {
         // SortField populationSort = new SortedNumericSortField(FIELD_NAME_POPULATION, SortField.Type.LONG, true);
 
         return doc;
+    }
+
+    private void appendToBuilder(StringBuilder builder, String name1, String name2) {
+        builder.append(",");
+        builder.append(name1);
+        builder.append(" ");
+        builder.append(name2);
     }
 
 }

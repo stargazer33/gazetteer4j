@@ -2,6 +2,7 @@ package com.remote4me.gazetteer4j.utils;
 
 import com.remote4me.gazetteer4j.AlternateNameRecord;
 import com.remote4me.gazetteer4j.DocFactory;
+import com.remote4me.gazetteer4j.Location;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
@@ -34,15 +35,22 @@ public class IndexBuilder {
     private Map<Integer, AlternateNameRecord> idToAlternateMap;
     private int count = 0;
 
+    Map<String, Location> adm1ToIdMap;
+    Map<String, Location> countryToIdMap;
+
     public IndexBuilder(Analyzer analyzer,
                         DocFactory docFactory,
                         Function<String[], Boolean> shouldIndexCallback,
-                        Map<Integer, AlternateNameRecord> idToAlternateMap
-    ) {
+                        Map<Integer, AlternateNameRecord> idToAlternateMap,
+                        Map<String, Location> adm1ToIdMap,
+                        Map<String, Location> countryToIdMap)
+    {
         this.analyzer = analyzer;
         this.docFactory = docFactory;
         this.shouldIndexCallback = shouldIndexCallback;
         this.idToAlternateMap = idToAlternateMap;
+        this.adm1ToIdMap = adm1ToIdMap;
+        this.countryToIdMap = countryToIdMap;
     }
 
     /**
@@ -79,7 +87,9 @@ public class IndexBuilder {
                                         ) {
                                     Document doc = docFactory.createFromLineInGeonamesFile(
                                             tokens,
-                                            idToAlternateMap
+                                            idToAlternateMap,
+                                            adm1ToIdMap,
+                                            countryToIdMap
                                     );
                                     indexWriter.addDocument(doc);
                                 }
