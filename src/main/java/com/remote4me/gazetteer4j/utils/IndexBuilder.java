@@ -1,5 +1,6 @@
 package com.remote4me.gazetteer4j.utils;
 
+import com.remote4me.gazetteer4j.AlternateNameRecord;
 import com.remote4me.gazetteer4j.DocFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
@@ -12,6 +13,7 @@ import org.apache.lucene.store.FSDirectory;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,15 +31,18 @@ public class IndexBuilder {
 
     private Function<String[], Boolean> shouldIndexCallback;
 
+    private Map<Integer, AlternateNameRecord> idToAlternateMap;
     private int count = 0;
 
     public IndexBuilder(Analyzer analyzer,
                         DocFactory docFactory,
-                        Function<String[], Boolean> shouldIndexCallback
+                        Function<String[], Boolean> shouldIndexCallback,
+                        Map<Integer, AlternateNameRecord> idToAlternateMap
     ) {
         this.analyzer = analyzer;
         this.docFactory = docFactory;
         this.shouldIndexCallback = shouldIndexCallback;
+        this.idToAlternateMap = idToAlternateMap;
     }
 
     /**
@@ -72,7 +77,10 @@ public class IndexBuilder {
                                 if (docFactory.shouldAddToIndex(tokens) &&
                                         shouldIndexCallback.apply(tokens)
                                         ) {
-                                    Document doc = docFactory.createFromLineInGeonamesFile(tokens);
+                                    Document doc = docFactory.createFromLineInGeonamesFile(
+                                            tokens,
+                                            idToAlternateMap
+                                    );
                                     indexWriter.addDocument(doc);
                                 }
                             } catch (IOException e) {

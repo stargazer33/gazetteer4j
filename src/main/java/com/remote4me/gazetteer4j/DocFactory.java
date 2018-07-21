@@ -3,6 +3,7 @@ package com.remote4me.gazetteer4j;
 import org.apache.lucene.document.Document;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Factory methods to create Location from Lucene Document(from Lucene index),
@@ -18,10 +19,13 @@ public interface DocFactory {
 
     /**
      * @param lineFromFile each element - a column in a line from Geonames file
+     * @param idToAlternateMap
      * @return new Lucene Document instance created from lineFromFile; never null
      * @throws IOException when something went wrong
      */
-    Document createFromLineInGeonamesFile(String[] lineFromFile) throws IOException;
+    Document createFromLineInGeonamesFile(
+            String[] lineFromFile,
+            Map<Integer, AlternateNameRecord> idToAlternateMap) throws IOException;
 
     /**
      * @param lineFromFile one line from main Geonames file

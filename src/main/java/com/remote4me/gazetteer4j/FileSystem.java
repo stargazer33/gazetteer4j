@@ -11,6 +11,7 @@ public interface FileSystem {
 
     String GEONAMES_FILE_ALL_COUNTRIES_TXT = "allCountries.txt";
     String GEONAMES_FILE_CITIES_15000_TXT = "cities15000.txt";
+    String ALTERNAME_NAMES_FILE = "alternateNamesV2.txt";
 
     //String GEONAMES_FILE_ALL_COUNTRIES_TXT = "allCountries.txt";
 }

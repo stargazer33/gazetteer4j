@@ -10,6 +10,7 @@ import java.io.IOException;
 public class BuildIndex {
 
     public void doBuild() throws IOException {
+
         new CompositeIndexBuilder().buildIndex();
     }
 

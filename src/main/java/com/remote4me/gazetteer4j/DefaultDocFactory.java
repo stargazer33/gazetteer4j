@@ -1,6 +1,7 @@
 package com.remote4me.gazetteer4j;
 
 import com.remote4me.gazetteer4j.searcher.TextSearcherLucene;
+import com.remote4me.gazetteer4j.utils.AlternateNamesFromFile;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.IntField;
@@ -8,6 +9,7 @@ import org.apache.lucene.document.TextField;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -79,12 +81,16 @@ public class DefaultDocFactory implements DocFactory {
 
 
     /**
-     * Index com.remote4me.gazetteer4j's one line data by built-in Lucene Index functions
+     * Create Lucene Document from input
      *
-     *            a line from the com.remote4me.gazetteer4j file
+     * @param tokens
+     * @param idToAlternateMap
      */
     @Override
-    public Document createFromLineInGeonamesFile(String[] tokens)
+    public Document createFromLineInGeonamesFile(
+            String[] tokens,
+            Map<Integer, AlternateNameRecord> idToAlternateMap
+    )
     {
 
         int ID = Integer.parseInt(tokens[0]);
@@ -121,8 +127,26 @@ public class DefaultDocFactory implements DocFactory {
         String featureCode = tokens[7];     // more granular category
         String combinedFeature = featureClass + "."+featureCode;
 
-        // hack begin
         String nameOfficial = name;
+
+        AlternateNameRecord alternate = idToAlternateMap.get(ID);
+        if(alternate!=null){
+            /*
+            if(alternate.preferredName != null){
+                nameOfficial = alternate.preferredName;
+            }
+            */
+            if(alternate.shortName != null){
+                name = alternate.shortName;
+            }
+        }
+        alternatenames = alternatenames + "," + name + " "+countryCode;
+        if(admin1Code != null && !admin1Code.equals("")){
+            alternatenames = alternatenames + "," + name + " "+admin1Code;
+        }
+
+        /*
+        // hack begin
         if(countryCode.equals("US")){
             if(combinedFeature.startsWith("P.")) {
                 if (name.endsWith(" City")) {
@@ -138,17 +162,12 @@ public class DefaultDocFactory implements DocFactory {
                     alternatenames = alternatenames + "," + name + " " + admin1Code;
                 }
             }
-            /*
-            else if (combinedFeature.equals("A.ADM1")){
-                alternatenames = alternatenames + "," + admin1Code;
-            }
-            */
-
         }
         else {
             alternatenames = alternatenames + "," + name + " "+countryCode;
         }
         // hack end
+        */
 
         Document doc = new Document();
         doc.add(new IntField(TextSearcherLucene.FIELD_NAME_ID, ID, Field.Store.YES));
