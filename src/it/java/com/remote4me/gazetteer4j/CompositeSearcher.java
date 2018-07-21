@@ -764,13 +764,18 @@ public class CompositeSearcher {
         Assert.assertEquals("California", loc.getName());
         */
 
-        /*
         city = "California, USA";
         loc = runSearchReturnLocation(city);
         Assert.assertEquals("CA", loc.getAdmin1Code());
         Assert.assertEquals("US", loc.getCountryCode());
         Assert.assertEquals("California", loc.getName());
-        */
+
+        city = "Texas, USA";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("TX", loc.getAdmin1Code());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("California", loc.getName());
+
     }
 
     @Test

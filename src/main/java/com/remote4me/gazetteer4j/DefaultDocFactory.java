@@ -167,21 +167,24 @@ public class DefaultDocFactory implements DocFactory {
             }
         }
 
-        Location adm1Loc = adm1ToIdMap.get(countryCode+"."+admin1Code);
-        if(adm1Loc!=null){
-            appendToBuilder(alternatenamesBig, name, admin1Code);
-            appendToBuilder(alternatenamesBig, name, adm1Loc.getName());
-            appendToBuilder(alternatenamesBig, name, adm1Loc.getOfficialName());
-            if(adm1Loc.getAlternateNamesList()!=null){
-                for (String altAdm1 : adm1Loc.getAlternateNamesList()) {
-                    appendToBuilder(alternatenamesBig, name, altAdm1);
+        if(!combinedFeature.equals("A.ADM1"))
+        {
+            Location adm1Loc = adm1ToIdMap.get(countryCode+"."+admin1Code);
+            if(adm1Loc!=null){
+                appendToBuilder(alternatenamesBig, name, admin1Code);
+                appendToBuilder(alternatenamesBig, name, adm1Loc.getName());
+                appendToBuilder(alternatenamesBig, name, adm1Loc.getOfficialName());
+                if(adm1Loc.getAlternateNamesList()!=null){
+                    for (String altAdm1 : adm1Loc.getAlternateNamesList()) {
+                        appendToBuilder(alternatenamesBig, name, altAdm1);
+                    }
                 }
-            }
 
-            // combinations
-            for (String altName : alternateNamesList) {
-                appendToBuilder(combinations, altName, admin1Code);
-                appendToBuilder(combinations, altName, adm1Loc.getName());
+                // combinations
+                for (String altName : alternateNamesList) {
+                    appendToBuilder(combinations, altName, admin1Code);
+                    appendToBuilder(combinations, altName, adm1Loc.getName());
+                }
             }
         }
 
