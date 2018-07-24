@@ -12,22 +12,22 @@ public class IT {
 
     @Test
     public void bigTest() throws IOException, ParseException {
-        //new BuildIndex().doBuild();
+        //new DoBuildIndex().doBuild();
 
-        CompositeSearcher searcher=new CompositeSearcher();
-        searcher.setUp();
+        DoSearch search=new DoSearch();
+        search.setUp();
 
-        searcher.edgeCases();
+        search.edgeCases();
 
-        searcher.onePartCities();
-        searcher.onePartRegions();
-        searcher.onePartCountries();
+        search.onePartCities();
+        search.onePartRegions();
+        search.onePartCountries();
 
-        searcher.twoPartsCityCountry();
-        searcher.twoPartsCityState();
-        searcher.twoPartsStateCountry();
+        search.twoPartsCityCountry();
+        search.twoPartsCityState();
+        search.twoPartsStateCountry();
 
-        searcher.threeParts();
+        search.threeParts();
     }
 
 }

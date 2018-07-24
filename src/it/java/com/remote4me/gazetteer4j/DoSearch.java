@@ -17,7 +17,7 @@ import static com.remote4me.gazetteer4j.FileSystem.INDEX_CITIES_15000;
 /**
  * Created by dima2 on 14.07.18.
  */
-public class CompositeSearcher {
+public class DoSearch {
 
     private TextSearcher searcher;
 

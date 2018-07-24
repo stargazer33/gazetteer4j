@@ -7,7 +7,7 @@ import java.io.IOException;
 /**
  * Created by dima2 on 15.07.18.
  */
-public class BuildIndex {
+public class DoBuildIndex {
 
     public void doBuild() throws IOException {
 
