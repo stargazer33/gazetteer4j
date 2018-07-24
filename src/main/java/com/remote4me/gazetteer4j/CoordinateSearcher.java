@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Use Lucene index to search near coordinates
+ * Use Lucene index to query near coordinates
  */
 public interface CoordinateSearcher {
 
     /**
-     * @param latitude center of search area
-     * @param longitude center of search area
-     * @param distance search radius
+     * @param latitude center of query area
+     * @param longitude center of query area
+     * @param distance query radius
      * @param count limits the size of result
      *
      * @return locations found in Lucene index using latitude/longitude and within the distance;

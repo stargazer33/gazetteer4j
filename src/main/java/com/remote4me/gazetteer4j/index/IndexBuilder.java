@@ -25,26 +25,21 @@ import java.util.stream.Stream;
  */
 public class IndexBuilder {
 
+    private static Logger LOG = Logger.getLogger( IndexBuilder.class.getName() );
+
     private Analyzer analyzer;
     private DocFactory docFactory;
     private IndexFilter indexFilter;
-
-    private static Logger LOG = Logger.getLogger( IndexBuilder.class.getName() );
-
-    private Function<String[], Boolean> shouldIndexCallback;
-
     private Map<Integer, AlternateNameRecord> idToAlternateMap;
     private int count = 0;
-
-    Map<String, Location> adm1ToIdMap;
-    Map<String, Location> countryToIdMap;
+    private Map<String, Location> adm1ToIdMap;
+    private Map<String, Location> countryToIdMap;
 
     /**
      *
      * @param analyzer Index-time analyzer
      * @param docFactory knows how to create Lucene Document objects from records in Geoname file
      * @param indexFilter knows which records in Geoname file should be added to Lucene index
-     * @param shouldIndexCallback
      * @param idToAlternateMap - used to obtain "prefered name" stored in AlternateNameRecord; key: geoname id
      * @param adm1ToIdMap - used to find the ADM1 name; key: ADM1 code
      * @param countryToIdMap - used to find the country names; key: country code
@@ -52,7 +47,6 @@ public class IndexBuilder {
     public IndexBuilder(Analyzer analyzer,
                         DocFactory docFactory,
                         IndexFilter indexFilter,
-                        Function<String[], Boolean> shouldIndexCallback,
                         Map<Integer, AlternateNameRecord> idToAlternateMap,
                         Map<String, Location> adm1ToIdMap,
                         Map<String, Location> countryToIdMap)
@@ -60,7 +54,6 @@ public class IndexBuilder {
         this.analyzer = analyzer;
         this.docFactory = docFactory;
         this.indexFilter = indexFilter;
-        this.shouldIndexCallback = shouldIndexCallback;
         this.idToAlternateMap = idToAlternateMap;
         this.adm1ToIdMap = adm1ToIdMap;
         this.countryToIdMap = countryToIdMap;
@@ -75,7 +68,7 @@ public class IndexBuilder {
      *            path to the created Lucene index directory.
      * @throws IOException when something went wrong
      */
-    public void buildIndex(String geonamesFile, String indexDirectoryPath) throws IOException
+    public void init(String geonamesFile, String indexDirectoryPath) throws IOException
     {
         LOG.log(Level.INFO, "Start Building Index: ["+geonamesFile+"] -> ["+indexDirectoryPath+"]");
         Directory indexDir = FSDirectory.open(new File(indexDirectoryPath).toPath());
@@ -95,9 +88,8 @@ public class IndexBuilder {
                             }
                             String[] tokens = line.split("\t");
                             try {
-                                if (indexFilter.shouldAddToIndex(tokens) &&
-                                        shouldIndexCallback.apply(tokens)
-                                        ) {
+                                if ( indexFilter.shouldAddToIndex(tokens) )
+                                {
                                     Document doc = docFactory.createFromLineInGeonamesFile(
                                             tokens,
                                             idToAlternateMap,

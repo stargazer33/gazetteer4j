@@ -12,7 +12,7 @@ public class IT {
 
     @Test
     public void bigTest() throws IOException, ParseException {
-        //new DoBuildIndex().doBuild();
+        new DoBuildIndex().doBuild();
 
         DoSearch search=new DoSearch();
         search.setUp();

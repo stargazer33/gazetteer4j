@@ -1,7 +1,7 @@
 package com.remote4me.gazetteer4j;
 
-import com.remote4me.gazetteer4j.search.AltNamesFilter;
-import com.remote4me.gazetteer4j.search.TextSearcherLucene;
+import com.remote4me.gazetteer4j.query.AltNamesFilter;
+import com.remote4me.gazetteer4j.query.TextSearcherLucene;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.junit.Assert;
@@ -11,7 +11,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.List;
 
-import static com.remote4me.gazetteer4j.DefaultDocFactory.FEATURES_CITIES;
 import static com.remote4me.gazetteer4j.FileSystem.INDEX_CITIES_15000;
 
 /**
@@ -23,7 +22,7 @@ public class DoSearch {
 
     @Before
     public void setUp() throws IOException {
-        // search = TextSearcherComposite.createDefaultCompositeSearcher();
+        // query = TextSearcherComposite.createDefaultCompositeSearcher();
         searcher = new TextSearcherLucene(
                 INDEX_CITIES_15000,
                 new StandardAnalyzer(),
@@ -71,12 +70,12 @@ public class DoSearch {
 
         /*
         city="Europe";
-        emptyList = search.search(city, 1);
+        emptyList = query.query(city, 1);
         Assert.assertEquals(0, emptyList.size());
         // TODO
 
         city="North America";
-        emptyList = search.search(city, 1);
+        emptyList = query.query(city, 1);
         Assert.assertEquals(0, emptyList.size());
         // TODO
         */
@@ -483,6 +482,8 @@ public class DoSearch {
 
         city="Santa Cruz, United States";
         loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Santa Cruz", loc.getName());
+        Assert.assertEquals("CA", loc.getAdmin1Code());
         Assert.assertEquals("US", loc.getCountryCode());
 
         city="Santa Cruz, Chile";
@@ -712,6 +713,12 @@ public class DoSearch {
         String city;
         Location loc;
 
+        city="Santa Clara, CA, USA";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Santa Clara", loc.getOfficialName());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("CA", loc.getAdmin1Code());
+
         // edge cases
         city="Santa Cruz, mumbo jumbo, USA";
         loc = runSearchReturnLocation(city);
@@ -719,7 +726,7 @@ public class DoSearch {
         Assert.assertEquals("US", loc.getCountryCode());
         Assert.assertEquals("CA", loc.getAdmin1Code());
 
-        city="Santa Cruz, California, mumbo jumbo";
+        city="Santa Cruz California mumbo jumbo";
         loc = runSearchReturnLocation(city);
         Assert.assertEquals("Santa Cruz", loc.getOfficialName());
         Assert.assertEquals("US", loc.getCountryCode());
@@ -763,7 +770,7 @@ public class DoSearch {
         //
 
         /*
-        city="Athens, Georgia, United States";
+        city="Athens Georgia United States";
         loc = runSearchReturnLocation(city);
         Assert.assertEquals("Athens", loc.getOfficialName());
         Assert.assertEquals("US", loc.getCountryCode());
@@ -781,20 +788,16 @@ public class DoSearch {
         loc = runSearchReturnLocation(city);
         Assert.assertEquals("Athens", loc.getOfficialName());
         Assert.assertEquals("US", loc.getCountryCode());
+        */
 
+        /*
         city="Santa Cruz, Калифорния, USA";
         loc = runSearchReturnLocation(city);
         Assert.assertEquals("Santa Cruz", loc.getOfficialName());
         Assert.assertEquals("US", loc.getCountryCode());
         Assert.assertEquals("CA", loc.getAdmin1Code());
 
-        city="Santa Clara, CA, USA";
-        loc = runSearchReturnLocation(city);
-        Assert.assertEquals("Santa Clara", loc.getOfficialName());
-        Assert.assertEquals("US", loc.getCountryCode());
-        Assert.assertEquals("CA", loc.getAdmin1Code());
         */
-
 
     }
 

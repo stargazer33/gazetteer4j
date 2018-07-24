@@ -1,9 +1,9 @@
 package com.remote4me.gazetteer4j;
 
-import com.remote4me.gazetteer4j.search.TextSearcherLucene;
+import com.remote4me.gazetteer4j.query.TextSearcherLucene;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.IntField;
+import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.TextField;
 
 import java.util.*;
@@ -121,12 +121,12 @@ public class DefaultDocFactory implements DocFactory {
 
         String nameOfficial = name;
         StringBuilder combinations = new StringBuilder();
-        AlternateNameRecord alternate = idToAlternateMap.get(ID);
+        AlternateNameRecord alternateRecord = idToAlternateMap.get(ID);
         List<String> alternateNamesList;
-        if(alternate!=null){
-            alternateNamesList = alternate.names;
-            if(alternate.shortName != null){
-                name = alternate.shortName;
+        if(alternateRecord!=null){
+            alternateNamesList = alternateRecord.names;
+            if(alternateRecord.shortName != null){
+                name = alternateRecord.shortName;
             }
         }
         else {
@@ -134,7 +134,6 @@ public class DefaultDocFactory implements DocFactory {
         }
 
         StringBuilder alternatenamesBig=new StringBuilder(alternatenames);
-
 
         Location coutryLoc=countryToIdMap.get(countryCode);
         if(coutryLoc != null ) {
@@ -176,23 +175,24 @@ public class DefaultDocFactory implements DocFactory {
         }
 
         Document doc = new Document();
-        doc.add(new IntField(TextSearcherLucene.FIELD_NAME_ID, ID, Field.Store.YES));
+
+        // this info just stored in index, we not going to search it
+        doc.add(new StoredField(TextSearcherLucene.FIELD_NAME_ID, ID));
+        doc.add(new StoredField(TextSearcherLucene.FIELD_NAME_ALTERNATE_NAMES, alternatenames));
+        doc.add(new StoredField(TextSearcherLucene.FIELD_NAME_TIMEZONE, timezone));
+
+        // this info used for search
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_NAME, name, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_OFFICIAL, nameOfficial, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ALTERNATE_NAMES, alternatenames, Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ALTERNATE_NAMES_BIG, alternatenamesBig.toString(), Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMBINTATIONS, combinations.toString(), Field.Store.YES));
+
+        // this info CAN be used for search
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_OFFICIAL, nameOfficial, Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_FEATURE_CODE, featureCode, Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_FEATURE_COMBINED, combinedFeature, Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COUNTRY_CODE, countryCode, Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ADMIN1_CODE, admin1Code, Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ADMIN2_CODE, admin2Code, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_TIMEZONE, timezone, Field.Store.YES));
-
-        // sort is turned off
-        //
-        // sort descending on population
-        // SortField populationSort = new SortedNumericSortField(FIELD_NAME_POPULATION, SortField.Type.LONG, true);
 
         return doc;
     }

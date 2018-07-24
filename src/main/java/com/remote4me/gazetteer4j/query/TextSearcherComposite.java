@@ -1,4 +1,4 @@
-package com.remote4me.gazetteer4j.search;
+package com.remote4me.gazetteer4j.query;
 
 import com.remote4me.gazetteer4j.*;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -7,15 +7,12 @@ import org.apache.lucene.queryparser.classic.ParseException;
 import java.io.IOException;
 import java.util.*;
 
-import static com.remote4me.gazetteer4j.DefaultDocFactory.FEATURES_ADM1;
-import static com.remote4me.gazetteer4j.DefaultDocFactory.FEATURES_CITIES;
-import static com.remote4me.gazetteer4j.DefaultDocFactory.FEATURES_COUNTRIES;
 import static com.remote4me.gazetteer4j.FileSystem.INDEX_CITIES_15000;
 import static com.remote4me.gazetteer4j.FileSystem.INDEX_COUNTRIES;
 import static com.remote4me.gazetteer4j.FileSystem.INDEX_STATES;
 
 /**
- * This implementation delegates the search of city/state/country to specialized searchers
+ * This implementation delegates the query of city/state/country to specialized searchers
  * (citySearcher, stateSearcher, countrySearcher).
  *
  * Uses resultFilter to join and group the results coming from different searchers.
@@ -72,7 +69,7 @@ public class TextSearcherComposite implements TextSearcher {
     }
 
     /**
-     * Constructs a search with given parameters
+     * Constructs a query with given parameters
      *
      * @param splitRegex regular expression used to split the Lucene query
      * @param cityTextSearcher the city Searcher

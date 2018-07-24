@@ -15,52 +15,34 @@ public class CompositeIndexBuilder {
 
     public void buildIndex() throws IOException
     {
-
-
-
         AlternateNamesFromFile alternateNames = new AlternateNamesFromFile();
-        alternateNames.processAlternateNames( FileSystem.ALTERNAME_NAMES_FILE);
-
+        alternateNames.init( FileSystem.GEONAMES_ALTERNAME_NAMES_FILE);
         // key: geoname id
+        // value: AlternateNameRecord
         Map<Integer, AlternateNameRecord> iIdToRecordMap = alternateNames.getIdToRecordMap();
 
-        Admin1AndCountryAltNames admin1CountryNames = new Admin1AndCountryAltNames(iIdToRecordMap);
-        admin1CountryNames.init(FileSystem.GEONAMES_FILE_ALL_COUNTRIES_TXT);
+
+        // admin1CountryNames provides
+        //   ADM1 -> Location map
+        // CCode  -> Location map
+        Admin1AndCountryAltNames admin1AndCountryAltNames = new Admin1AndCountryAltNames(iIdToRecordMap);
+        admin1AndCountryAltNames.init(FileSystem.GEONAMES_MAIN_FILE_ALL_COUNTRIES);
+
 
         IndexBuilder indexBuilder;
-
         indexBuilder = new IndexBuilder(
                 new StandardAnalyzer(),
                 new DefaultDocFactory(),
-                new FeaturesIndexFilter(DefaultDocFactory.FEATURES_CITIES_COUNTRIES_ADM1),
-                //DefaultDocFactory.LOAD_ALL_FUNCTION,
-                tokens -> {
-                    switch (tokens[6]){ // featureClass
-                        case "A":
-                            return true;
-                        case "P":
-                            int population = 0;
-                            try {
-                                population = Integer.parseInt(tokens[14]);
-                            } catch (NumberFormatException e) {
-                                population = 0;// Treat as population does not exists
-                            }
-                            if (population > 15000) {
-                                return true;
-                            }
-                            return false;
-                        default:
-                            return false;
-                    }
-                },
+                new FeaturesPopulationIndexFilter(
+                        DefaultDocFactory.FEATURES_CITIES_COUNTRIES_ADM1,
+                        15000
+                ),
                 iIdToRecordMap,
-                admin1CountryNames.getAdm1ToLocationMap(),
-                admin1CountryNames.getCcodeToLocationMap()
+                admin1AndCountryAltNames.getAdm1ToLocationMap(),
+                admin1AndCountryAltNames.getCcodeToLocationMap()
         );
-
-        indexBuilder.buildIndex(
-                //FileSystem.GEONAMES_FILE_CITIES_15000_TXT,
-                FileSystem.GEONAMES_FILE_ALL_COUNTRIES_TXT,
+        indexBuilder.init(
+                FileSystem.GEONAMES_MAIN_FILE_ALL_COUNTRIES,
                 FileSystem.INDEX_CITIES_15000);
 
 

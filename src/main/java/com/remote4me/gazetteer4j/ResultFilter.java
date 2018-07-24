@@ -3,7 +3,7 @@ package com.remote4me.gazetteer4j;
 import java.util.List;
 
 /**
- * Filter Lucene search results (before return to user).
+ * Filter Lucene query results (before return to user).
  */
 public interface ResultFilter {
 

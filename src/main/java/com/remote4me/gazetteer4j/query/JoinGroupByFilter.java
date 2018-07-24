@@ -1,4 +1,4 @@
-package com.remote4me.gazetteer4j.search;
+package com.remote4me.gazetteer4j.query;
 
 import com.remote4me.gazetteer4j.Location;
 import com.remote4me.gazetteer4j.ResultFilter;
@@ -38,7 +38,7 @@ public class JoinGroupByFilter implements ResultFilter {
             //    P.P city (covers all variants including P.PPL, P.PPLA3, P.PPLA3...)
             //    A.P country
             //    A.A state
-            // country/state having most such features is the top country/state we search !
+            // country/state having most such features is the top country/state we query !
             //
             String topCountryCode = findCCodeHavingMaxFeatures(luceneSearchResults, TextSearcher.GroupByField.COUNTRY);
             String topStateCode = findCCodeHavingMaxFeatures(luceneSearchResults, TextSearcher.GroupByField.STATE);

@@ -2,7 +2,7 @@ package com.remote4me.gazetteer4j.utils;
 
 import com.remote4me.gazetteer4j.Location;
 import com.remote4me.gazetteer4j.TextSearcher;
-import com.remote4me.gazetteer4j.search.TextSearcherComposite;
+import com.remote4me.gazetteer4j.query.TextSearcherComposite;
 
 import java.io.PrintStream;
 import java.util.List;

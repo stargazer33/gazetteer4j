@@ -5,7 +5,7 @@ import java.util.Set;
 /**
  *
  */
-public class FeaturesIndexFilter implements IndexFilter {
+class FeaturesIndexFilter implements IndexFilter {
 
     private Set featuresWhitelist;
 

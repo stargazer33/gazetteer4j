@@ -1,4 +1,4 @@
-package com.remote4me.gazetteer4j.search;
+package com.remote4me.gazetteer4j.query;
 
 import com.remote4me.gazetteer4j.Location;
 import com.remote4me.gazetteer4j.ResultFilter;
@@ -21,7 +21,7 @@ public class AltNamesFilter implements ResultFilter {
     private static final int WEIGHT_WORD_MATCH = 20000;
     private static final int WEIGHT_EXACT_MATCH = 22000; // must be higher than WEIGHT_WORD_MATCH
     private static final int WEIGHT_PART_MATCH = 15000;
-    private static final int WEIGHT_NOT_A_CITY = 3500; // this will be SUBTRACTED
+    private static final int WEIGHT_FEATURE_ADM = 4500; // this will be SUBTRACTED
 
     /**
      * @param luceneSearchResults the data to filter
@@ -67,9 +67,9 @@ public class AltNamesFilter implements ResultFilter {
                 weight = WEIGHT_PART_MATCH;
             }
 
-            if(!candidateLoc.getFeatureCombined().startsWith("P")){
-                // downvote everything which is not a city
-                weight -= WEIGHT_NOT_A_CITY;
+            if(candidateLoc.getFeatureCombined().startsWith("A.ADM")){
+                // downvote everything which looks like state
+                weight -= WEIGHT_FEATURE_ADM;
             }
 
             // get all alternate names of candidateLoc

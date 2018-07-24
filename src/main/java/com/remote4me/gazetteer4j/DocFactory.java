@@ -6,18 +6,22 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * Factory methods to create Location from Lucene Document(from Lucene index),
- * to create Lucene Document from Geoname file (when building index)
+ * Factory methods to create Location from Lucene Document,
+ * to create Lucene Document from Geoname file
  */
 public interface DocFactory {
 
     /**
+     * Document -> Location; usually this happens during query time
+     *
      * @param source a Lucene document (usually from Lucene index)
      * @return new Location instance created from source; never null
      */
     Location createFromLuceneDocument(Document source);
 
     /**
+     * (Main) Geonames file -> Document; usually this happens during index time
+     *
      * @param lineFromFile each element - a column in a line from Geonames file
      * @param idToAlternateMap
      * @param adm1ToIdMap

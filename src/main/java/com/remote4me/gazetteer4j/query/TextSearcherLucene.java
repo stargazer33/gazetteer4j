@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.remote4me.gazetteer4j.search;
+package com.remote4me.gazetteer4j.query;
 
 import com.remote4me.gazetteer4j.Location;
 import com.remote4me.gazetteer4j.DocFactory;
@@ -82,7 +82,7 @@ public class TextSearcherLucene implements TextSearcher {
     private static final int MAX_HITS_NUMBER = 10;
 
     /**
-     * Creates a search with given parameters
+     * Creates a query with given parameters
      *
      * @param indexPath the path to lucene index
      * @param analyzer the query-time analyzer
@@ -103,7 +103,7 @@ public class TextSearcherLucene implements TextSearcher {
 
         Map<String, Float> boosts = new HashMap<>();
         boosts.put(FIELD_NAME_NAME, (float) 1000);
-        boosts.put(FIELD_NAME_ALTERNATE_NAMES, (float) 1);
+        boosts.put(FIELD_NAME_ALTERNATE_NAMES_BIG, (float) 1);
         boosts.put(FIELD_NAME_COMBINTATIONS, (float) 0.1);
         queryParser = new MultiFieldQueryParser(
                 new String[]{

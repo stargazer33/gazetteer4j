@@ -9,9 +9,8 @@ public interface FileSystem {
     String INDEX_STATES = "geoindex-states";
     String INDEX_COUNTRIES = "geoindex-countries";
 
-    String GEONAMES_FILE_ALL_COUNTRIES_TXT = "allCountries.txt";
-    String GEONAMES_FILE_CITIES_15000_TXT = "cities15000.txt";
-    String ALTERNAME_NAMES_FILE = "alternateNamesV2.txt";
+    String GEONAMES_MAIN_FILE_ALL_COUNTRIES = "allCountries.txt";
+    String GEONAMES_MAIN_FILE_CITIES_15000 = "cities15000.txt";
+    String GEONAMES_ALTERNAME_NAMES_FILE = "alternateNamesV2.txt";
 
-    //String GEONAMES_FILE_ALL_COUNTRIES_TXT = "allCountries.txt";
 }

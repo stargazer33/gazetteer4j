@@ -25,7 +25,7 @@ class AlternateNamesFromFile {
 
     private int count = 1;
 
-    public void processAlternateNames(String alternateFile) throws IOException {
+    public void init(String alternateFile) throws IOException {
         LOG.log(Level.INFO, "Start reading: [" + alternateFile + "] ");
 
         try (Stream<String> stream = Files.lines(Paths.get(alternateFile))) {
