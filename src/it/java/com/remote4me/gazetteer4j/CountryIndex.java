@@ -1,7 +1,7 @@
 package com.remote4me.gazetteer4j;
 
-import com.remote4me.gazetteer4j.filter.AltNamesFilter;
-import com.remote4me.gazetteer4j.searcher.TextSearcherLucene;
+import com.remote4me.gazetteer4j.search.AltNamesFilter;
+import com.remote4me.gazetteer4j.search.TextSearcherLucene;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.junit.Assert;
@@ -21,7 +21,7 @@ public class CountryIndex {
         resolver = new TextSearcherLucene(
                 "geoIndex-countries",
                 new StandardAnalyzer(),
-                new DefaultDocFactory(DefaultDocFactory.FEATURES_COUNTRIES),
+                new DefaultDocFactory(),
                 new AltNamesFilter()
         );
     }

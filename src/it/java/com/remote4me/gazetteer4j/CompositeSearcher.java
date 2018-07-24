@@ -1,8 +1,7 @@
 package com.remote4me.gazetteer4j;
 
-import com.remote4me.gazetteer4j.filter.AltNamesFilter;
-import com.remote4me.gazetteer4j.searcher.TextSearcherComposite;
-import com.remote4me.gazetteer4j.searcher.TextSearcherLucene;
+import com.remote4me.gazetteer4j.search.AltNamesFilter;
+import com.remote4me.gazetteer4j.search.TextSearcherLucene;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.junit.Assert;
@@ -24,11 +23,11 @@ public class CompositeSearcher {
 
     @Before
     public void setUp() throws IOException {
-        // searcher = TextSearcherComposite.createDefaultCompositeSearcher();
+        // search = TextSearcherComposite.createDefaultCompositeSearcher();
         searcher = new TextSearcherLucene(
                 INDEX_CITIES_15000,
                 new StandardAnalyzer(),
-                new DefaultDocFactory(FEATURES_CITIES),
+                new DefaultDocFactory(),
                 new AltNamesFilter()
         );
 
@@ -72,12 +71,12 @@ public class CompositeSearcher {
 
         /*
         city="Europe";
-        emptyList = searcher.search(city, 1);
+        emptyList = search.search(city, 1);
         Assert.assertEquals(0, emptyList.size());
         // TODO
 
         city="North America";
-        emptyList = searcher.search(city, 1);
+        emptyList = search.search(city, 1);
         Assert.assertEquals(0, emptyList.size());
         // TODO
         */

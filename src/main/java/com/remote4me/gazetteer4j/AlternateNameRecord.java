@@ -1,7 +1,5 @@
 package com.remote4me.gazetteer4j;
 
-import com.remote4me.gazetteer4j.utils.AlternateNamesFromFile;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

@@ -1,4 +1,4 @@
-package com.remote4me.gazetteer4j.filter;
+package com.remote4me.gazetteer4j.search;
 
 import com.remote4me.gazetteer4j.Location;
 

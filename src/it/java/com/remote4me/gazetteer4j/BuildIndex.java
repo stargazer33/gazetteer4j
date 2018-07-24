@@ -1,6 +1,6 @@
 package com.remote4me.gazetteer4j;
 
-import com.remote4me.gazetteer4j.utils.CompositeIndexBuilder;
+import com.remote4me.gazetteer4j.index.CompositeIndexBuilder;
 
 import java.io.IOException;
 

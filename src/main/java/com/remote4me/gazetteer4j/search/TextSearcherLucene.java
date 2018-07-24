@@ -15,21 +15,18 @@
  * limitations under the License.
  */
 
-package com.remote4me.gazetteer4j.searcher;
+package com.remote4me.gazetteer4j.search;
 
 import com.remote4me.gazetteer4j.Location;
 import com.remote4me.gazetteer4j.DocFactory;
 import com.remote4me.gazetteer4j.ResultFilter;
 import com.remote4me.gazetteer4j.TextSearcher;
-import com.remote4me.gazetteer4j.filter.AltNamesFilter;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.queryparser.flexible.core.builders.QueryBuilder;
-import org.apache.lucene.queryparser.simple.SimpleQueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -85,7 +82,7 @@ public class TextSearcherLucene implements TextSearcher {
     private static final int MAX_HITS_NUMBER = 10;
 
     /**
-     * Creates a searcher with given parameters
+     * Creates a search with given parameters
      *
      * @param indexPath the path to lucene index
      * @param analyzer the query-time analyzer

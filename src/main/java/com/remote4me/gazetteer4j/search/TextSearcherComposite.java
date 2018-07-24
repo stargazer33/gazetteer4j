@@ -1,10 +1,6 @@
-package com.remote4me.gazetteer4j.searcher;
+package com.remote4me.gazetteer4j.search;
 
 import com.remote4me.gazetteer4j.*;
-import com.remote4me.gazetteer4j.filter.Admin1Filter;
-import com.remote4me.gazetteer4j.filter.AltNamesFilter;
-import com.remote4me.gazetteer4j.filter.CCodeFilter;
-import com.remote4me.gazetteer4j.filter.JoinGroupByFilter;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryparser.classic.ParseException;
 
@@ -46,7 +42,7 @@ public class TextSearcherComposite implements TextSearcher {
         TextSearcherLucene cities = new TextSearcherLucene(
                 INDEX_CITIES_15000,
                 new StandardAnalyzer(),
-                new DefaultDocFactory(FEATURES_CITIES),
+                new DefaultDocFactory(),
                 new AltNamesFilter()
         );
 
@@ -54,14 +50,14 @@ public class TextSearcherComposite implements TextSearcher {
         TextSearcherLucene states = new TextSearcherLucene(
                 INDEX_STATES,
                 new StandardAnalyzer(),
-                new DefaultDocFactory(FEATURES_ADM1),
+                new DefaultDocFactory(),
                 new Admin1Filter() // supports ADM1 exact match
         );
 
         TextSearcherLucene countries = new TextSearcherLucene(
                 INDEX_COUNTRIES,
                 new StandardAnalyzer(),
-                new DefaultDocFactory(FEATURES_COUNTRIES),
+                new DefaultDocFactory(),
                 new CCodeFilter() // supports country-code exact match
         );
 
@@ -76,7 +72,7 @@ public class TextSearcherComposite implements TextSearcher {
     }
 
     /**
-     * Constructs a searcher with given parameters
+     * Constructs a search with given parameters
      *
      * @param splitRegex regular expression used to split the Lucene query
      * @param cityTextSearcher the city Searcher

@@ -1,4 +1,4 @@
-package com.remote4me.gazetteer4j.utils;
+package com.remote4me.gazetteer4j.index;
 
 import com.remote4me.gazetteer4j.AlternateNameRecord;
 
@@ -12,12 +12,15 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 /**
- * Created by dima2 on 21.07.18.
+ *
  */
-public class AlternateNamesFromFile {
+class AlternateNamesFromFile {
 
     private static final Logger LOG = Logger.getLogger(AlternateNamesFromFile.class.getName());
 
+    /**
+     * key: geoname id
+     */
     private Map<Integer, AlternateNameRecord> idToRecordMap = new HashMap<>();
 
     private int count = 1;

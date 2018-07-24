@@ -26,12 +26,8 @@ public interface DocFactory {
      */
     Document createFromLineInGeonamesFile(
             String[] lineFromFile,
-            Map<Integer, AlternateNameRecord> idToAlternateMap, Map<String, Location> adm1ToIdMap, Map<String, Location> countryToIdMap) throws IOException;
+            Map<Integer, AlternateNameRecord> idToAlternateMap,
+            Map<String, Location> adm1ToIdMap,
+            Map<String, Location> countryToIdMap) throws IOException;
 
-    /**
-     * @param lineFromFile one line from main Geonames file
-     *                     (see allCountries.txt, cities15000.txt and similar)
-     * @return true when lineFromFile should be added to Lucene index; otherwise false
-     */
-    boolean shouldAddToIndex(String[] lineFromFile);
 }

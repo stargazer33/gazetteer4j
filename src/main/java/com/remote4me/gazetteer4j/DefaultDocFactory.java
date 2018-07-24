@@ -1,6 +1,6 @@
 package com.remote4me.gazetteer4j;
 
-import com.remote4me.gazetteer4j.searcher.TextSearcherLucene;
+import com.remote4me.gazetteer4j.search.TextSearcherLucene;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.IntField;
@@ -13,9 +13,6 @@ import java.util.function.Function;
  * Created by dima2 on 12.07.18.
  */
 public class DefaultDocFactory implements DocFactory {
-
-
-    private Set featuresWhitelist;
 
     /**
      *  see http://download.geonames.org/export/dump/featureCodes_en.txt
@@ -49,10 +46,6 @@ public class DefaultDocFactory implements DocFactory {
         }
     };
 
-    public DefaultDocFactory(Set featuresWhitelist){
-        this.featuresWhitelist = featuresWhitelist;
-    }
-
     @Override
     public Location createFromLuceneDocument(Document source) {
 
@@ -74,12 +67,6 @@ public class DefaultDocFactory implements DocFactory {
         result.setFeatureCombined(source.get(TextSearcherLucene.FIELD_NAME_FEATURE_COMBINED));
         result.setTimezone(source.get(TextSearcherLucene.FIELD_NAME_TIMEZONE));
         return result;
-    }
-
-
-    @Override
-    public boolean shouldAddToIndex(String[] lineFromFile) {
-        return featuresWhitelist.contains( lineFromFile[6]+"."+lineFromFile[7] );
     }
 
 
