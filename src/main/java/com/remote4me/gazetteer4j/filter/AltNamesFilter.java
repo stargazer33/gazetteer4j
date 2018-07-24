@@ -18,9 +18,10 @@ public class AltNamesFilter implements ResultFilter {
      */
     private static final int WEIGHT_SORT_ORDER = 20;
     private static final int WEIGHT_SIZE_ALT_NAME = 50;
-    private static final int WEIGHT_NAME_MATCH = 20000;
-    private static final int WEIGHT_NAME_EXACT_MATCH = 22000; // must be higher than WEIGHT_NAME_MATCH
-    private static final int WEIGHT_NAME_PART_MATCH = 15000;
+    private static final int WEIGHT_WORD_MATCH = 20000;
+    private static final int WEIGHT_EXACT_MATCH = 22000; // must be higher than WEIGHT_WORD_MATCH
+    private static final int WEIGHT_PART_MATCH = 15000;
+    private static final int WEIGHT_NOT_A_CITY = 3500; // this will be SUBTRACTED
 
     /**
      * @param luceneSearchResults the data to filter
@@ -50,24 +51,25 @@ public class AltNamesFilter implements ResultFilter {
         for (int i = 0; i < luceneSearchResults.size(); ++i) {
             int weight = 0;
             Location candidateLoc = luceneSearchResults.get(i);
-            String resolvedName = String.format(" %s ", candidateLoc.getName());
+            String candidateNameAsWord = String.format(" %s ", candidateLoc.getName());
 
             if (isExactMatch(query, candidateLoc))
             {
                 // exact match -> highest weight!
-                weight = WEIGHT_NAME_EXACT_MATCH;
+                weight = WEIGHT_EXACT_MATCH;
             }
-            else if (resolvedName.contains(String.format(" %s ", query))) {
-                // Assign a weight as per configuration if extracted name is found as a exact word in name
-                weight = WEIGHT_NAME_MATCH;
+            else if (candidateNameAsWord.contains(String.format(" %s ", query))) {
+                // candidate name contains query as a word
+                weight = WEIGHT_WORD_MATCH;
             }
-            else if (resolvedName.contains(query)) {
-                // Assign a weight as per configuration if extracted name is found partly in name
-                weight = WEIGHT_NAME_PART_MATCH;
+            else if ( query.contains(candidateLoc.getName()) ) {
+                // query contains candidate name
+                weight = WEIGHT_PART_MATCH;
             }
 
             if(!candidateLoc.getFeatureCombined().startsWith("P")){
-                weight -= 3500; // prefer cities
+                // downvote everything which is not a city
+                weight -= WEIGHT_NOT_A_CITY;
             }
 
             // get all alternate names of candidateLoc

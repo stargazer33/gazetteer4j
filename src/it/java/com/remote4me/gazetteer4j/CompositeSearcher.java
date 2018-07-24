@@ -141,6 +141,85 @@ public class CompositeSearcher {
     }
 
     @Test
+    public void states() throws IOException, ParseException {
+        String city;
+        Location loc;
+
+        city="D.C.";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Washington, D.C.", loc.getName());
+        Assert.assertEquals("District of Columbia", loc.getOfficialName());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("DC", loc.getAdmin1Code());
+
+        city="DC";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Washington", loc.getName());
+        Assert.assertEquals("Washington, D.C.", loc.getOfficialName());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("DC", loc.getAdmin1Code());
+
+        city="Washington DC";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Washington, D.C.", loc.getOfficialName());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("DC", loc.getAdmin1Code());
+
+        city="Washington/DC";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Washington, D.C.", loc.getOfficialName());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("DC", loc.getAdmin1Code());
+
+        city="Georgia, United States";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Georgia", loc.getOfficialName());
+        Assert.assertEquals("GA", loc.getAdmin1Code());
+
+        city="Georgia";
+        loc = runSearchReturnLocation(city);
+
+        city = "New Mexico";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("New Mexico", loc.getOfficialName());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("NM", loc.getAdmin1Code());
+
+        city = "South Carolina";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("South Carolina", loc.getOfficialName());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("SC", loc.getAdmin1Code());
+
+        city = "State of Washington";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Washington", loc.getOfficialName());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("WA", loc.getAdmin1Code());
+
+        city = "West Virginia";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("West Virginia", loc.getOfficialName());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("WV", loc.getAdmin1Code());
+
+        city="California";
+        loc = runSearchReturnLocation(city);
+        Assert.assertTrue(loc.getFeatureCode().startsWith("ADM1"));
+        Assert.assertEquals("California", loc.getName());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("CA", loc.getAdmin1Code());
+
+        city="Florida";
+        loc = runSearchReturnLocation(city);
+        Assert.assertTrue(loc.getFeatureCode().startsWith("ADM1"));
+        Assert.assertEquals("Florida", loc.getName());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("FL", loc.getAdmin1Code());
+
+    }
+
+    @Test
     public void onePartCities() throws IOException, ParseException {
 
 
@@ -345,18 +424,6 @@ public class CompositeSearcher {
         Assert.assertEquals("Frankfurt am Main", loc.getOfficialName());
         Assert.assertEquals("DE", loc.getCountryCode());
 
-        city="Washington DC";
-        loc = runSearchReturnLocation(city);
-        Assert.assertEquals("Washington, D.C.", loc.getOfficialName());
-        Assert.assertEquals("US", loc.getCountryCode());
-        Assert.assertEquals("DC", loc.getAdmin1Code());
-
-        city="Washington/DC";
-        loc = runSearchReturnLocation(city);
-        Assert.assertEquals("Washington, D.C.", loc.getOfficialName());
-        Assert.assertEquals("US", loc.getCountryCode());
-        Assert.assertEquals("DC", loc.getAdmin1Code());
-
         city="Pittsburgh PA";
         loc = runSearchReturnLocation(city);
         Assert.assertEquals("Pittsburgh", loc.getOfficialName());
@@ -365,35 +432,6 @@ public class CompositeSearcher {
 
     }
 
-    @Test
-    public void onePartState() throws IOException, ParseException {
-
-
-        String city;
-        Location loc;
-
-        city="California";
-        loc = runSearchReturnLocation(city);
-        Assert.assertTrue(loc.getFeatureCode().startsWith("ADM1"));
-        Assert.assertEquals("California", loc.getName());
-        Assert.assertEquals("US", loc.getCountryCode());
-        Assert.assertEquals("CA", loc.getAdmin1Code());
-
-        city="Florida";
-        loc = runSearchReturnLocation(city);
-        Assert.assertTrue(loc.getFeatureCode().startsWith("ADM1"));
-        Assert.assertEquals("Florida", loc.getName());
-        Assert.assertEquals("US", loc.getCountryCode());
-        Assert.assertEquals("FL", loc.getAdmin1Code());
-
-        city="DC";
-        loc = runSearchReturnLocation(city);
-        Assert.assertTrue(loc.getFeatureCode().startsWith("ADM1"));
-        Assert.assertEquals("District of Columbia", loc.getName());
-        Assert.assertEquals("US", loc.getCountryCode());
-        Assert.assertEquals("DC", loc.getAdmin1Code());
-
-    }
 
     @Test
     public void twoPartsCityCountry() throws IOException, ParseException {
@@ -533,6 +571,16 @@ public class CompositeSearcher {
         Assert.assertEquals("FL", loc.getAdmin1Code());
 
         city="Cologne, DE";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Köln", loc.getOfficialName());
+        Assert.assertEquals("DE", loc.getCountryCode());
+
+        city="Köln";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Köln", loc.getOfficialName());
+        Assert.assertEquals("DE", loc.getCountryCode());
+
+        city="Cologne";
         loc = runSearchReturnLocation(city);
         Assert.assertEquals("Köln", loc.getOfficialName());
         Assert.assertEquals("DE", loc.getCountryCode());
@@ -774,7 +822,7 @@ public class CompositeSearcher {
         loc = runSearchReturnLocation(city);
         Assert.assertEquals("TX", loc.getAdmin1Code());
         Assert.assertEquals("US", loc.getCountryCode());
-        Assert.assertEquals("California", loc.getName());
+        Assert.assertEquals("Texas", loc.getName());
 
     }
 
