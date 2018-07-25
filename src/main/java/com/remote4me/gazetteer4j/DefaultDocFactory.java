@@ -119,7 +119,7 @@ public class DefaultDocFactory implements DocFactory {
         String combinedFeature = featureClass + "." + featureCode;
 
         String nameOfficial = name;
-        StringBuilder combinations = new StringBuilder();
+        StringBuilder combinations2 = new StringBuilder();
         AlternateNameRecord alternateRecord = idToAlternateMap.get(ID);
         List<String> alternateNamesList;
         if (alternateRecord != null) {
@@ -154,8 +154,8 @@ public class DefaultDocFactory implements DocFactory {
 
             // combinations
             for (String altName : alternateNamesList) {
-                appendToBuilder(combinations, altName, countryCode);
-                appendToBuilder(combinations, altName, coutryLoc.getName());
+                appendToBuilder(combinations2, altName, countryCode);
+                appendToBuilder(combinations2, altName, coutryLoc.getName());
             }
         }
         if( !FEATURES_ADM1.contains(combinedFeature) )
@@ -173,13 +173,13 @@ public class DefaultDocFactory implements DocFactory {
 
                 // combinations
                 for (String altName : alternateNamesList) {
-                    appendToBuilder(combinations, altName, admin1Code);
-                    appendToBuilder(combinations, altName, adm1Loc.getName());
+                    appendToBuilder(combinations2, altName, admin1Code);
+                    appendToBuilder(combinations2, altName, adm1Loc.getName());
                 }
             }
         }
 
-        StringBuilder cityCombinations=new StringBuilder();
+        StringBuilder combinations3=new StringBuilder();
         if ( FEATURES_CITIES.contains(combinedFeature) &&
                 adm1Loc != null &&
                 adm1Loc.getAlternateNamesList() != null &&
@@ -198,18 +198,17 @@ public class DefaultDocFactory implements DocFactory {
             for (String altCity : cityNames) {
                 for (String altCountry : coutryLoc.getAlternateNamesList()) {
                     for (String altAdm1 : myAltAdm1) {
-                        cityCombinations.append(",");
-                        cityCombinations.append(altCity);
-                        cityCombinations.append(" ");
-                        cityCombinations.append(altAdm1);
-                        cityCombinations.append(" ");
-                        cityCombinations.append(altCountry);
+                        combinations3.append(",");
+                        combinations3.append(altCity);
+                        combinations3.append(" ");
+                        combinations3.append(altAdm1);
+                        combinations3.append(" ");
+                        combinations3.append(altCountry);
                     }
                 }
             }
         }
 
-        String allCombinations = combinations.toString();
         Document doc = new Document();
 
         // this info just stored in index, we not going to search it
@@ -220,8 +219,8 @@ public class DefaultDocFactory implements DocFactory {
         // this info used for search
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_NAME, name, Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ALTERNATE_NAMES_BIG, alternatenamesBig.toString(), Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMBINTATIONS, allCombinations, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMB3, cityCombinations.toString(), Field.Store.YES));
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMB2, combinations2.toString(), Field.Store.YES));
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMB3, combinations3.toString(), Field.Store.YES));
 
         // this info CAN be used for search
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_OFFICIAL, nameOfficial, Field.Store.YES));

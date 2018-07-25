@@ -69,7 +69,7 @@ public class TextSearcherLucene implements TextSearcher {
     public static final String FIELD_NAME_OFFICIAL = "official";
     public static final String FIELD_NAME_ALTERNATE_NAMES = "alternatenames";
     public static final String FIELD_NAME_ALTERNATE_NAMES_BIG = "alternatenamesBig";
-    public static final String FIELD_NAME_COMBINTATIONS = "combinationsa";
+    public static final String FIELD_NAME_COMB2 = "combinationsa";
     public static final String FIELD_NAME_COMB3 = "comb3";
 
     public static final String FIELD_NAME_FEATURE_CODE = "featureCode";
@@ -105,14 +105,14 @@ public class TextSearcherLucene implements TextSearcher {
         Map<String, Float> boosts = new HashMap<>();
         boosts.put(FIELD_NAME_NAME, (float) 1000);
         boosts.put(FIELD_NAME_ALTERNATE_NAMES_BIG, (float) 100);
-        boosts.put(FIELD_NAME_COMBINTATIONS, (float) 10);
+        boosts.put(FIELD_NAME_COMB2, (float) 10);
         boosts.put(FIELD_NAME_COMB3, (float) 1);
 
         queryParser = new MultiFieldQueryParser(
                 new String[]{
                         FIELD_NAME_NAME,
                         FIELD_NAME_ALTERNATE_NAMES_BIG,
-                        FIELD_NAME_COMBINTATIONS,
+                        FIELD_NAME_COMB2,
                         FIELD_NAME_COMB3
                 },
                 analyzer,
