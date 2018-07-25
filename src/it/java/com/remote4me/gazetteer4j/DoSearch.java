@@ -552,6 +552,13 @@ public class DoSearch {
         Assert.assertEquals("US", loc.getCountryCode());
         Assert.assertEquals("CA", loc.getAdmin1Code());
 
+        /* TODO
+        city="Santa Cruz, Чили";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Santa Cruz", loc.getOfficialName());
+        Assert.assertEquals("CL", loc.getCountryCode());
+        */
+
         city="Santa Cruz, California";
         loc = runSearchReturnLocation(city);
         Assert.assertEquals("Santa Cruz", loc.getOfficialName());
@@ -562,6 +569,7 @@ public class DoSearch {
         loc = runSearchReturnLocation(city);
         Assert.assertEquals("Athens", loc.getOfficialName());
         Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("GA", loc.getAdmin1Code());
 
         // this is tricky because "Ft. Lauderdale" is an alternative name
         city="Ft. Lauderdale, FL";
@@ -726,6 +734,25 @@ public class DoSearch {
         Assert.assertEquals("US", loc.getCountryCode());
         Assert.assertEquals("CA", loc.getAdmin1Code());
 
+
+        city="Santa Cruz Chile";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Santa Cruz", loc.getOfficialName());
+        Assert.assertEquals("CL", loc.getCountryCode());
+
+        /* TODO
+        city="Santa Cruz mumbo jumbo Chile";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Santa Cruz", loc.getOfficialName());
+        Assert.assertEquals("CL", loc.getCountryCode());
+
+        city="Santa Cruz Chile mumbo jumbo";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Santa Cruz", loc.getOfficialName());
+        Assert.assertEquals("CL", loc.getCountryCode());
+        */
+
+
         city="Santa Cruz California mumbo jumbo";
         loc = runSearchReturnLocation(city);
         Assert.assertEquals("Santa Cruz", loc.getOfficialName());
@@ -767,37 +794,21 @@ public class DoSearch {
         loc = runSearchReturnLocation(city);
         Assert.assertEquals("Athens", loc.getOfficialName());
         Assert.assertEquals("US", loc.getCountryCode());
-        //
 
-        /*
         city="Athens Georgia United States";
         loc = runSearchReturnLocation(city);
         Assert.assertEquals("Athens", loc.getOfficialName());
         Assert.assertEquals("US", loc.getCountryCode());
-        */
 
-        /*
         city="Athens, Georgia, USA";
         loc = runSearchReturnLocation(city);
         Assert.assertEquals("Athens", loc.getOfficialName());
         Assert.assertEquals("US", loc.getCountryCode());
-        */
 
-        /*
         city="Athens, GA, USA";
         loc = runSearchReturnLocation(city);
         Assert.assertEquals("Athens", loc.getOfficialName());
         Assert.assertEquals("US", loc.getCountryCode());
-        */
-
-        /*
-        city="Santa Cruz, Калифорния, USA";
-        loc = runSearchReturnLocation(city);
-        Assert.assertEquals("Santa Cruz", loc.getOfficialName());
-        Assert.assertEquals("US", loc.getCountryCode());
-        Assert.assertEquals("CA", loc.getAdmin1Code());
-
-        */
 
     }
 

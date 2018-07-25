@@ -128,13 +128,20 @@ public class DefaultDocFactory implements DocFactory {
                 name = alternateRecord.shortName;
             }
         } else {
-            alternateNamesList = Arrays.asList(alternatenames.split(","));
+            alternateNamesList = new ArrayList<>();
+            /*
+            alternateNamesList.add(name);
+            if( !nameOfficial.equals(name) ) {
+                alternateNamesList.add(nameOfficial);
+            }
+            */
+            alternateNamesList.addAll(Arrays.asList(alternatenames.split(",")));
         }
 
         StringBuilder alternatenamesBig = new StringBuilder(alternatenames);
-
-            //if ( !FEATURES_COUNTRIES.contains(combinedFeature)) {
+        Location adm1Loc = adm1ToIdMap.get(countryCode+"."+admin1Code);
         Location coutryLoc = countryToIdMap.get(countryCode);
+
         if (coutryLoc != null) {
             appendToBuilder(alternatenamesBig, name, countryCode);
             appendToBuilder(alternatenamesBig, name, coutryLoc.getName());
@@ -151,11 +158,9 @@ public class DefaultDocFactory implements DocFactory {
                 appendToBuilder(combinations, altName, coutryLoc.getName());
             }
         }
-            //}
         if( !FEATURES_ADM1.contains(combinedFeature) )
         {
             // this location is not an ADM1/state
-            Location adm1Loc = adm1ToIdMap.get(countryCode+"."+admin1Code);
             if(adm1Loc!=null){
                 appendToBuilder(alternatenamesBig, name, admin1Code);
                 appendToBuilder(alternatenamesBig, name, adm1Loc.getName());
@@ -174,6 +179,37 @@ public class DefaultDocFactory implements DocFactory {
             }
         }
 
+        StringBuilder cityCombinations=new StringBuilder();
+        if ( FEATURES_CITIES.contains(combinedFeature) &&
+                adm1Loc != null &&
+                adm1Loc.getAlternateNamesList() != null &&
+                coutryLoc != null &&
+                coutryLoc.getAlternateNamesList() != null )
+        {
+            // this is a city with adm1 and country
+            List<String> cityNames=new ArrayList<>();
+            cityNames.add(name);
+            if( !nameOfficial.equals(name) ) {
+                cityNames.add(nameOfficial);
+            }
+            List<String> myAltAdm1 = new ArrayList<>();
+            myAltAdm1.add(adm1Loc.getAdmin1Code());
+            myAltAdm1.addAll(adm1Loc.getAlternateNamesList());
+            for (String altCity : cityNames) {
+                for (String altCountry : coutryLoc.getAlternateNamesList()) {
+                    for (String altAdm1 : myAltAdm1) {
+                        cityCombinations.append(",");
+                        cityCombinations.append(altCity);
+                        cityCombinations.append(" ");
+                        cityCombinations.append(altAdm1);
+                        cityCombinations.append(" ");
+                        cityCombinations.append(altCountry);
+                    }
+                }
+            }
+        }
+
+        String allCombinations = combinations.toString();
         Document doc = new Document();
 
         // this info just stored in index, we not going to search it
@@ -184,7 +220,8 @@ public class DefaultDocFactory implements DocFactory {
         // this info used for search
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_NAME, name, Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ALTERNATE_NAMES_BIG, alternatenamesBig.toString(), Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMBINTATIONS, combinations.toString(), Field.Store.YES));
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMBINTATIONS, allCombinations, Field.Store.YES));
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMB3, cityCombinations.toString(), Field.Store.YES));
 
         // this info CAN be used for search
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_OFFICIAL, nameOfficial, Field.Store.YES));
