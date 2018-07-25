@@ -40,7 +40,7 @@ public class IndexBuilder {
      * @param analyzer Index-time analyzer
      * @param docFactory knows how to create Lucene Document objects from records in Geoname file
      * @param indexFilter knows which records in Geoname file should be added to Lucene index
-     * @param idToAlternateMap - used to obtain "prefered name" stored in AlternateNameRecord; key: geoname id
+     * @param idToAlternateMap - used to obtain "preferred name" stored in AlternateNameRecord; key: geoname id
      * @param adm1ToIdMap - used to find the ADM1 name; key: ADM1 code
      * @param countryToIdMap - used to find the country names; key: country code
      */

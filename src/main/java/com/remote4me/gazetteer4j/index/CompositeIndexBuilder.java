@@ -5,16 +5,26 @@ import com.remote4me.gazetteer4j.DefaultDocFactory;
 import com.remote4me.gazetteer4j.FileSystem;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * TODO
  */
 public class CompositeIndexBuilder {
 
+    private static Logger LOG = Logger.getLogger( CompositeIndexBuilder.class.getName() );
+
     public void buildIndex() throws IOException
     {
+        if(new File(FileSystem.INDEX_CITIES_15000).exists()){
+            LOG.log(Level.SEVERE, "Index already exists in " + FileSystem.INDEX_CITIES_15000 );
+            return;
+        }
+
         AlternateNamesFromFile alternateNames = new AlternateNamesFromFile();
         alternateNames.init( FileSystem.GEONAMES_ALTERNAME_NAMES_FILE);
         // key: geoname id

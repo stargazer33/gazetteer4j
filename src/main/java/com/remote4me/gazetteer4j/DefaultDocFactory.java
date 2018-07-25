@@ -82,8 +82,7 @@ public class DefaultDocFactory implements DocFactory {
             String[] tokens,
             Map<Integer, AlternateNameRecord> idToAlternateMap,
             Map<String, Location> adm1ToIdMap,
-            Map<String, Location> countryToIdMap)
-    {
+            Map<String, Location> countryToIdMap) {
 
         int ID = Integer.parseInt(tokens[0]);
         String name = tokens[1];
@@ -99,7 +98,7 @@ public class DefaultDocFactory implements DocFactory {
         try {
             longitude = Double.parseDouble(tokens[5]);
         } catch (NumberFormatException e) {
-            longitude =Location.OUT_OF_BOUNDS;
+            longitude = Location.OUT_OF_BOUNDS;
         }
 
         int population = 0;
@@ -117,30 +116,30 @@ public class DefaultDocFactory implements DocFactory {
 
         String featureClass = tokens[6];    // char(1)
         String featureCode = tokens[7];     // more granular category
-        String combinedFeature = featureClass + "."+featureCode;
+        String combinedFeature = featureClass + "." + featureCode;
 
         String nameOfficial = name;
         StringBuilder combinations = new StringBuilder();
         AlternateNameRecord alternateRecord = idToAlternateMap.get(ID);
         List<String> alternateNamesList;
-        if(alternateRecord!=null){
+        if (alternateRecord != null) {
             alternateNamesList = alternateRecord.names;
-            if(alternateRecord.shortName != null){
+            if (alternateRecord.shortName != null) {
                 name = alternateRecord.shortName;
             }
-        }
-        else {
+        } else {
             alternateNamesList = Arrays.asList(alternatenames.split(","));
         }
 
-        StringBuilder alternatenamesBig=new StringBuilder(alternatenames);
+        StringBuilder alternatenamesBig = new StringBuilder(alternatenames);
 
-        Location coutryLoc=countryToIdMap.get(countryCode);
-        if(coutryLoc != null ) {
+            //if ( !FEATURES_COUNTRIES.contains(combinedFeature)) {
+        Location coutryLoc = countryToIdMap.get(countryCode);
+        if (coutryLoc != null) {
             appendToBuilder(alternatenamesBig, name, countryCode);
             appendToBuilder(alternatenamesBig, name, coutryLoc.getName());
             appendToBuilder(alternatenamesBig, name, coutryLoc.getOfficialName());
-            if(coutryLoc.getAlternateNamesList()!=null) {
+            if (coutryLoc.getAlternateNamesList() != null) {
                 for (String altCountry : coutryLoc.getAlternateNamesList()) {
                     appendToBuilder(alternatenamesBig, name, altCountry);
                 }
@@ -152,9 +151,10 @@ public class DefaultDocFactory implements DocFactory {
                 appendToBuilder(combinations, altName, coutryLoc.getName());
             }
         }
-
-        if(!combinedFeature.equals("A.ADM1"))
+            //}
+        if( !FEATURES_ADM1.contains(combinedFeature) )
         {
+            // this location is not an ADM1/state
             Location adm1Loc = adm1ToIdMap.get(countryCode+"."+admin1Code);
             if(adm1Loc!=null){
                 appendToBuilder(alternatenamesBig, name, admin1Code);
