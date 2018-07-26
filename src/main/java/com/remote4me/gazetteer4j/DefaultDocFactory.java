@@ -130,7 +130,17 @@ public class DefaultDocFactory implements DocFactory {
             }
         }
 
-        SearchFields searchFields = computeSearchFields(name, nameOfficial, combinedFeature, countryCode, admin1Code, alternatenames, alternateRecord, adm1Loc, countryLoc);
+        SearchFields searchFields = computeSearchFields(
+                name,
+                nameOfficial,
+                combinedFeature,
+                countryCode,
+                admin1Code,
+                alternatenames,
+                alternateRecord,
+                adm1Loc,
+                countryLoc
+        );
 
         Document doc = new Document();
 
@@ -155,7 +165,17 @@ public class DefaultDocFactory implements DocFactory {
         return doc;
     }
 
-    private SearchFields computeSearchFields(String name, String nameOfficial, String combinedFeature, String countryCode, String admin1Code, String alternatenames, AlternateNameRecord alternateRecord, Location adm1Loc, Location countryLoc) {
+    private SearchFields computeSearchFields(
+            String name,
+            String nameOfficial,
+            String combinedFeature,
+            String countryCode,
+            String admin1Code,
+            String alternatenames,
+            AlternateNameRecord alternateRecord,
+            Location adm1Loc,
+            Location countryLoc)
+    {
         List<String> alternateNamesList;
         if (alternateRecord != null) {
             alternateNamesList = alternateRecord.names;
@@ -167,22 +187,28 @@ public class DefaultDocFactory implements DocFactory {
         StringBuilder combinations2build = new StringBuilder();
         StringBuilder alternatenamesBigBuild = new StringBuilder(alternatenames);
 
-        if (countryLoc != null) {
-            appendToBuilder(alternatenamesBigBuild, name, countryCode);
-            appendToBuilder(alternatenamesBigBuild, name, countryLoc.getName());
-            appendToBuilder(alternatenamesBigBuild, name, countryLoc.getOfficialName());
-            if (countryLoc.getAlternateNamesList() != null) {
-                for (String altCountry : countryLoc.getAlternateNamesList()) {
-                    appendToBuilder(alternatenamesBigBuild, name, altCountry);
-                }
-            }
+        if ( FEATURES_CITIES.contains(combinedFeature) ){
 
-            // combinations
-            for (String altName : alternateNamesList) {
-                appendToBuilder(combinations2build, altName, countryCode);
-                appendToBuilder(combinations2build, altName, countryLoc.getName());
-            }
         }
+        else if (FEATURES_ADM1.contains(combinedFeature)) {
+
+        }
+        else if (FEATURES_COUNTRIES.contains(combinedFeature)){
+
+        }
+        else {
+            throw new IllegalStateException("Unknown feature: "+combinedFeature);
+        }
+
+
+        appendCountryCombinations(
+                combinations2build,
+                alternatenamesBigBuild,
+                countryCode,
+                countryLoc,
+                name,
+                alternateNamesList);
+
         if( !FEATURES_ADM1.contains(combinedFeature) )
         {
             // this location is not an ADM1/state
@@ -204,6 +230,40 @@ public class DefaultDocFactory implements DocFactory {
             }
         }
 
+        StringBuilder combinations3build = computeCombination3(
+                name,
+                nameOfficial,
+                combinedFeature,
+                adm1Loc,
+                countryLoc);
+
+        SearchFields searchFields = new SearchFields();
+        searchFields.combinations2 = combinations2build.toString();
+        searchFields.combinations3 = combinations3build.toString();
+        searchFields.alternatenamesBig = alternatenamesBigBuild.toString();
+        return searchFields;
+    }
+
+    private void appendCountryCombinations(StringBuilder combinations2build, StringBuilder alternatenamesBigBuild, String countryCode, Location countryLoc, String name, List<String> alternateNamesList) {
+        if (countryLoc != null) {
+            appendToBuilder(alternatenamesBigBuild, name, countryCode);
+            appendToBuilder(alternatenamesBigBuild, name, countryLoc.getName());
+            appendToBuilder(alternatenamesBigBuild, name, countryLoc.getOfficialName());
+            if (countryLoc.getAlternateNamesList() != null) {
+                for (String altCountry : countryLoc.getAlternateNamesList()) {
+                    appendToBuilder(alternatenamesBigBuild, name, altCountry);
+                }
+            }
+
+            // combinations
+            for (String altName : alternateNamesList) {
+                appendToBuilder(combinations2build, altName, countryCode);
+                appendToBuilder(combinations2build, altName, countryLoc.getName());
+            }
+        }
+    }
+
+    private StringBuilder computeCombination3(String name, String nameOfficial, String combinedFeature, Location adm1Loc, Location countryLoc) {
         StringBuilder combinations3build=new StringBuilder();
         if ( FEATURES_CITIES.contains(combinedFeature) &&
                 adm1Loc != null &&
@@ -233,12 +293,7 @@ public class DefaultDocFactory implements DocFactory {
                 }
             }
         }
-
-        SearchFields searchFields = new SearchFields();
-        searchFields.combinations2 = combinations2build.toString();
-        searchFields.combinations3 = combinations3build.toString();
-        searchFields.alternatenamesBig = alternatenamesBigBuild.toString();
-        return searchFields;
+        return combinations3build;
     }
 
     private void appendToBuilder(StringBuilder builder, String name1, String name2) {
