@@ -211,23 +211,8 @@ public class DefaultDocFactory implements DocFactory {
 
         if( !FEATURES_ADM1.contains(combinedFeature) )
         {
-            // this location is not an ADM1/state
-            if(adm1Loc!=null){
-                appendToBuilder(alternatenamesBigBuild, name, admin1Code);
-                appendToBuilder(alternatenamesBigBuild, name, adm1Loc.getName());
-                appendToBuilder(alternatenamesBigBuild, name, adm1Loc.getOfficialName());
-                if(adm1Loc.getAlternateNamesList()!=null){
-                    for (String altAdm1 : adm1Loc.getAlternateNamesList()) {
-                        appendToBuilder(alternatenamesBigBuild, name, altAdm1);
-                    }
-                }
+            appendAdm1Combinations(combinations2build, alternatenamesBigBuild, admin1Code, adm1Loc, name, alternateNamesList);
 
-                // combinations
-                for (String altName : alternateNamesList) {
-                    appendToBuilder(combinations2build, altName, admin1Code);
-                    appendToBuilder(combinations2build, altName, adm1Loc.getName());
-                }
-            }
         }
 
         StringBuilder combinations3build = computeCombination3(
@@ -242,6 +227,26 @@ public class DefaultDocFactory implements DocFactory {
         searchFields.combinations3 = combinations3build.toString();
         searchFields.alternatenamesBig = alternatenamesBigBuild.toString();
         return searchFields;
+    }
+
+    private void appendAdm1Combinations(StringBuilder combinations2build, StringBuilder alternatenamesBigBuild, String admin1Code, Location adm1Loc, String name, List<String> alternateNamesList) {
+        // this location is not an ADM1/state
+        if(adm1Loc!=null){
+            appendToBuilder(alternatenamesBigBuild, name, admin1Code);
+            appendToBuilder(alternatenamesBigBuild, name, adm1Loc.getName());
+            appendToBuilder(alternatenamesBigBuild, name, adm1Loc.getOfficialName());
+            if(adm1Loc.getAlternateNamesList()!=null){
+                for (String altAdm1 : adm1Loc.getAlternateNamesList()) {
+                    appendToBuilder(alternatenamesBigBuild, name, altAdm1);
+                }
+            }
+
+            // combinations
+            for (String altName : alternateNamesList) {
+                appendToBuilder(combinations2build, altName, admin1Code);
+                appendToBuilder(combinations2build, altName, adm1Loc.getName());
+            }
+        }
     }
 
     private void appendCountryCombinations(StringBuilder combinations2build, StringBuilder alternatenamesBigBuild, String countryCode, Location countryLoc, String name, List<String> alternateNamesList) {
