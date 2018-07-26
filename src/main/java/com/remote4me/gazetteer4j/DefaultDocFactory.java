@@ -120,29 +120,59 @@ public class DefaultDocFactory implements DocFactory {
         String combinedFeature = tokens[6] + "." + tokens[7];
 
         String nameOfficial = name;
-        StringBuilder combinations2build = new StringBuilder();
         AlternateNameRecord alternateRecord = idToAlternateMap.get(ID);
-        List<String> alternateNamesList;
+        Location adm1Loc = adm1ToIdMap.get(countryCode+"."+admin1Code);
+        Location countryLoc = countryToIdMap.get(countryCode);
+
         if (alternateRecord != null) {
-            alternateNamesList = alternateRecord.names;
             if (alternateRecord.shortName != null) {
                 name = alternateRecord.shortName;
             }
+        }
+
+        SearchFields searchFields = computeSearchFields(name, nameOfficial, combinedFeature, countryCode, admin1Code, alternatenames, alternateRecord, adm1Loc, countryLoc);
+
+        Document doc = new Document();
+
+        // this info just stored in index, we not going to search it
+        doc.add(new StoredField(TextSearcherLucene.FIELD_NAME_ID, ID));
+        doc.add(new StoredField(TextSearcherLucene.FIELD_NAME_ALTERNATE_NAMES, alternatenames));
+        doc.add(new StoredField(TextSearcherLucene.FIELD_NAME_TIMEZONE, timezone));
+
+        // this info used for search
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_NAME, name, Field.Store.YES));
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ALTERNATE_NAMES_BIG, searchFields.alternatenamesBig, Field.Store.YES));
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMB2, searchFields.combinations2, Field.Store.YES));
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMB3, searchFields.combinations3, Field.Store.YES));
+
+        // this info CAN be used for search
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_OFFICIAL, nameOfficial, Field.Store.YES));
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_FEATURE_COMBINED, combinedFeature, Field.Store.YES));
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COUNTRY_CODE, countryCode, Field.Store.YES));
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ADMIN1_CODE, admin1Code, Field.Store.YES));
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ADMIN2_CODE, admin2Code, Field.Store.YES));
+
+        return doc;
+    }
+
+    private SearchFields computeSearchFields(String name, String nameOfficial, String combinedFeature, String countryCode, String admin1Code, String alternatenames, AlternateNameRecord alternateRecord, Location adm1Loc, Location countryLoc) {
+        List<String> alternateNamesList;
+        if (alternateRecord != null) {
+            alternateNamesList = alternateRecord.names;
         } else {
             alternateNamesList = new ArrayList<>();
             alternateNamesList.addAll(Arrays.asList(alternatenames.split(",")));
         }
 
+        StringBuilder combinations2build = new StringBuilder();
         StringBuilder alternatenamesBigBuild = new StringBuilder(alternatenames);
-        Location adm1Loc = adm1ToIdMap.get(countryCode+"."+admin1Code);
-        Location coutryLoc = countryToIdMap.get(countryCode);
 
-        if (coutryLoc != null) {
+        if (countryLoc != null) {
             appendToBuilder(alternatenamesBigBuild, name, countryCode);
-            appendToBuilder(alternatenamesBigBuild, name, coutryLoc.getName());
-            appendToBuilder(alternatenamesBigBuild, name, coutryLoc.getOfficialName());
-            if (coutryLoc.getAlternateNamesList() != null) {
-                for (String altCountry : coutryLoc.getAlternateNamesList()) {
+            appendToBuilder(alternatenamesBigBuild, name, countryLoc.getName());
+            appendToBuilder(alternatenamesBigBuild, name, countryLoc.getOfficialName());
+            if (countryLoc.getAlternateNamesList() != null) {
+                for (String altCountry : countryLoc.getAlternateNamesList()) {
                     appendToBuilder(alternatenamesBigBuild, name, altCountry);
                 }
             }
@@ -150,7 +180,7 @@ public class DefaultDocFactory implements DocFactory {
             // combinations
             for (String altName : alternateNamesList) {
                 appendToBuilder(combinations2build, altName, countryCode);
-                appendToBuilder(combinations2build, altName, coutryLoc.getName());
+                appendToBuilder(combinations2build, altName, countryLoc.getName());
             }
         }
         if( !FEATURES_ADM1.contains(combinedFeature) )
@@ -178,8 +208,8 @@ public class DefaultDocFactory implements DocFactory {
         if ( FEATURES_CITIES.contains(combinedFeature) &&
                 adm1Loc != null &&
                 adm1Loc.getAlternateNamesList() != null &&
-                coutryLoc != null &&
-                coutryLoc.getAlternateNamesList() != null )
+                countryLoc != null &&
+                countryLoc.getAlternateNamesList() != null )
         {
             // this is a city with adm1 and country
             List<String> cityNames=new ArrayList<>();
@@ -191,7 +221,7 @@ public class DefaultDocFactory implements DocFactory {
             myAltAdm1.add(adm1Loc.getAdmin1Code());
             myAltAdm1.addAll(adm1Loc.getAlternateNamesList());
             for (String altCity : cityNames) {
-                for (String altCountry : coutryLoc.getAlternateNamesList()) {
+                for (String altCountry : countryLoc.getAlternateNamesList()) {
                     for (String altAdm1 : myAltAdm1) {
                         combinations3build.append(",");
                         combinations3build.append(altCity);
@@ -208,28 +238,7 @@ public class DefaultDocFactory implements DocFactory {
         searchFields.combinations2 = combinations2build.toString();
         searchFields.combinations3 = combinations3build.toString();
         searchFields.alternatenamesBig = alternatenamesBigBuild.toString();
-
-        Document doc = new Document();
-
-        // this info just stored in index, we not going to search it
-        doc.add(new StoredField(TextSearcherLucene.FIELD_NAME_ID, ID));
-        doc.add(new StoredField(TextSearcherLucene.FIELD_NAME_ALTERNATE_NAMES, alternatenames));
-        doc.add(new StoredField(TextSearcherLucene.FIELD_NAME_TIMEZONE, timezone));
-
-        // this info used for search
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_NAME, name, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ALTERNATE_NAMES_BIG, searchFields.alternatenamesBig, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMB2, searchFields.combinations2, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMB3, searchFields.combinations3, Field.Store.YES));
-
-        // this info CAN be used for search
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_OFFICIAL, nameOfficial, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_FEATURE_COMBINED, combinedFeature, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COUNTRY_CODE, countryCode, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ADMIN1_CODE, admin1Code, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ADMIN2_CODE, admin2Code, Field.Store.YES));
-
-        return doc;
+        return searchFields;
     }
 
     private void appendToBuilder(StringBuilder builder, String name1, String name2) {
