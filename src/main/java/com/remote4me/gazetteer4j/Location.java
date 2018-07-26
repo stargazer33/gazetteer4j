@@ -30,7 +30,6 @@ public class Location {
     private String countryCode;
     private String admin1Code;
     private String timezone;
-    private String featureCode;
     private String featureCombined;
 
     private transient String alternateNames;
@@ -87,14 +86,6 @@ public class Location {
         this.weight = weight;
     }
 
-    public String getFeatureCode() {
-        return featureCode;
-    }
-
-    public void setFeatureCode(String featureCode) {
-        this.featureCode = featureCode;
-    }
-
     public void setOfficialName(String officialName) {
         this.officialName = officialName;
     }
@@ -118,7 +109,7 @@ public class Location {
         sb.append(", officialName='").append(officialName).append('\'');
         sb.append(", countryCode='").append(countryCode).append('\'');
         sb.append(", admin1Code='").append(admin1Code).append('\'');
-        sb.append(", featureCode='").append(featureCode).append('\'');
+        sb.append(", feature='").append(featureCombined).append('\'');
         sb.append(", timezone='").append(timezone).append('\'');
         sb.append('}');
         return sb.toString();

@@ -88,23 +88,23 @@ public class DoSearch {
 
         city="Georgia";
         loc = runSearchReturnLocation(city);
-        Assert.assertTrue(loc.getFeatureCode().startsWith("PCLI"));
+        Assert.assertTrue(loc.getFeatureCombined().startsWith("A.PCLI"));
         Assert.assertEquals("GE", loc.getCountryCode());
 
         city = "Cuba"; // Cuba as country, not Santiago de Cuba as city!
         loc = runSearchReturnLocation(city);
         Assert.assertTrue(loc.getOfficialName().contains("Cuba"));
-        Assert.assertEquals("PCLI",  loc.getFeatureCode());
+        Assert.assertEquals("A.PCLI",  loc.getFeatureCombined());
 
         city = "USA";
         loc = runSearchReturnLocation(city);
         Assert.assertTrue(loc.getOfficialName().contains("United"));
-        Assert.assertEquals("PCLI",  loc.getFeatureCode());
+        Assert.assertEquals("A.PCLI",  loc.getFeatureCombined());
 
         city = "Spain";
         loc = runSearchReturnLocation(city);
         Assert.assertTrue(loc.getOfficialName().contains("Spain"));
-        Assert.assertEquals("PCLI",  loc.getFeatureCode());
+        Assert.assertEquals("A.PCLI",  loc.getFeatureCombined());
 
         city = "Singapore";
         loc = runSearchReturnLocation(city);
@@ -114,22 +114,22 @@ public class DoSearch {
         city = "Germany";
         loc = runSearchReturnLocation(city);
         Assert.assertTrue(loc.getOfficialName().contains("Germany"));
-        Assert.assertEquals("PCLI",  loc.getFeatureCode());
+        Assert.assertEquals("A.PCLI",  loc.getFeatureCombined());
 
         city = "Costa Rica";
         loc = runSearchReturnLocation(city);
         Assert.assertTrue(loc.getOfficialName().contains("Costa Rica"));
-        Assert.assertEquals("PCLI",  loc.getFeatureCode());
+        Assert.assertEquals("A.PCLI",  loc.getFeatureCombined());
 
         city = "Canada";
         loc = runSearchReturnLocation(city);
         Assert.assertTrue(loc.getOfficialName().contains("Canada"));
-        Assert.assertEquals("PCLI",  loc.getFeatureCode());
+        Assert.assertEquals("A.PCLI",  loc.getFeatureCombined());
 
         city = "Mexico";
         loc = runSearchReturnLocation(city);
         Assert.assertTrue(loc.getOfficialName().contains("Mexico"));
-        Assert.assertEquals("PCLI",  loc.getFeatureCode());
+        Assert.assertEquals("A.PCLI",  loc.getFeatureCombined());
 
         city = "Luxembourg";
         loc = runSearchReturnLocation(city);
@@ -203,14 +203,14 @@ public class DoSearch {
 
         city="California";
         loc = runSearchReturnLocation(city);
-        Assert.assertTrue(loc.getFeatureCode().startsWith("ADM1"));
+        Assert.assertTrue(loc.getFeatureCombined().startsWith("A.ADM1"));
         Assert.assertEquals("California", loc.getName());
         Assert.assertEquals("US", loc.getCountryCode());
         Assert.assertEquals("CA", loc.getAdmin1Code());
 
         city="Florida";
         loc = runSearchReturnLocation(city);
-        Assert.assertTrue(loc.getFeatureCode().startsWith("ADM1"));
+        Assert.assertTrue(loc.getFeatureCombined().startsWith("A.ADM1"));
         Assert.assertEquals("Florida", loc.getName());
         Assert.assertEquals("US", loc.getCountryCode());
         Assert.assertEquals("FL", loc.getAdmin1Code());
@@ -231,7 +231,7 @@ public class DoSearch {
 
         city="New York";
         loc = runSearchReturnLocation(city);
-        Assert.assertTrue(loc.getFeatureCode().startsWith("P"));
+        Assert.assertTrue(loc.getFeatureCombined().startsWith("P"));
         Assert.assertEquals("New York City", loc.getOfficialName());
         Assert.assertEquals("New York", loc.getName());
         Assert.assertEquals("US", loc.getCountryCode());
@@ -381,7 +381,7 @@ public class DoSearch {
         // also the getOfficialName() and getName() are not the same!
         city="NYC";
         loc = runSearchReturnLocation(city);
-        Assert.assertTrue(loc.getFeatureCode().startsWith("P"));
+        Assert.assertTrue(loc.getFeatureCombined().startsWith("P"));
         Assert.assertEquals("New York City", loc.getOfficialName());
         Assert.assertEquals("New York", loc.getName());
         Assert.assertEquals("US", loc.getCountryCode());

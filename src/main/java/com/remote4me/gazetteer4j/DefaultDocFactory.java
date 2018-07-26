@@ -63,7 +63,6 @@ public class DefaultDocFactory implements DocFactory {
         }
         result.setCountryCode(source.get(TextSearcherLucene.FIELD_NAME_COUNTRY_CODE));
         result.setAdmin1Code(source.get(TextSearcherLucene.FIELD_NAME_ADMIN1_CODE));
-        result.setFeatureCode(source.get(TextSearcherLucene.FIELD_NAME_FEATURE_CODE));
         result.setFeatureCombined(source.get(TextSearcherLucene.FIELD_NAME_FEATURE_COMBINED));
         result.setTimezone(source.get(TextSearcherLucene.FIELD_NAME_TIMEZONE));
         return result;
@@ -113,10 +112,7 @@ public class DefaultDocFactory implements DocFactory {
         String admin1Code = tokens[10];     // eg US State
         String admin2Code = tokens[11];     // eg county
         String timezone = tokens[17];
-
-        String featureClass = tokens[6];    // char(1)
-        String featureCode = tokens[7];     // more granular category
-        String combinedFeature = featureClass + "." + featureCode;
+        String combinedFeature = tokens[6] + "." + tokens[7];
 
         String nameOfficial = name;
         StringBuilder combinations2 = new StringBuilder();
@@ -224,7 +220,6 @@ public class DefaultDocFactory implements DocFactory {
 
         // this info CAN be used for search
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_OFFICIAL, nameOfficial, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_FEATURE_CODE, featureCode, Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_FEATURE_COMBINED, combinedFeature, Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COUNTRY_CODE, countryCode, Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ADMIN1_CODE, admin1Code, Field.Store.YES));
