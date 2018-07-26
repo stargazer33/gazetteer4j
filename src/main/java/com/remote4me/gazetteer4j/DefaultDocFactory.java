@@ -189,13 +189,21 @@ public class DefaultDocFactory implements DocFactory {
         StringBuilder alternatenamesBigBuild = new StringBuilder(alternatenames);
 
         if ( FEATURES_CITIES.contains(combinedFeature) ){
-
             combinations3build = computeCombination3(
                     name,
                     nameOfficial,
                     combinedFeature,
                     adm1Loc,
                     countryLoc);
+
+            appendAdm1Combinations(
+                    combinations2build,
+                    alternatenamesBigBuild,
+                    admin1Code,
+                    adm1Loc,
+                    name,
+                    alternateNamesList);
+
         }
         else if (FEATURES_ADM1.contains(combinedFeature)) {
 
@@ -207,7 +215,6 @@ public class DefaultDocFactory implements DocFactory {
             throw new IllegalStateException("Unknown feature: "+combinedFeature);
         }
 
-
         appendCountryCombinations(
                 combinations2build,
                 alternatenamesBigBuild,
@@ -215,19 +222,6 @@ public class DefaultDocFactory implements DocFactory {
                 countryLoc,
                 name,
                 alternateNamesList);
-
-        if( !FEATURES_ADM1.contains(combinedFeature) )
-        {
-            appendAdm1Combinations(
-                    combinations2build,
-                    alternatenamesBigBuild,
-                    admin1Code,
-                    adm1Loc,
-                    name,
-                    alternateNamesList);
-
-        }
-
 
         SearchFields searchFields = new SearchFields();
         searchFields.combinations2 = combinations2build.toString();
@@ -277,11 +271,10 @@ public class DefaultDocFactory implements DocFactory {
 
     private StringBuilder computeCombination3(String name, String nameOfficial, String combinedFeature, Location adm1Loc, Location countryLoc) {
         StringBuilder combinations3build=new StringBuilder();
-        if ( FEATURES_CITIES.contains(combinedFeature) &&
-                adm1Loc != null &&
-                adm1Loc.getAlternateNamesList() != null &&
-                countryLoc != null &&
-                countryLoc.getAlternateNamesList() != null )
+        if ( adm1Loc != null &&
+             adm1Loc.getAlternateNamesList() != null &&
+             countryLoc != null &&
+             countryLoc.getAlternateNamesList() != null )
         {
             // this is a city with adm1 and country
             List<String> cityNames=new ArrayList<>();
