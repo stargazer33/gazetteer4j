@@ -1,5 +1,6 @@
 package com.remote4me.gazetteer4j.query;
 
+import com.remote4me.gazetteer4j.DefaultDocFactory;
 import com.remote4me.gazetteer4j.Location;
 import com.remote4me.gazetteer4j.ResultFilter;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +20,7 @@ public class AltNamesFilter implements ResultFilter {
     private static final int WEIGHT_SORT_ORDER = 20;
     private static final int WEIGHT_SIZE_ALT_NAME = 50;
     private static final int WEIGHT_WORD_MATCH = 20000;
-    private static final int WEIGHT_EXACT_MATCH = 22000; // must be higher than WEIGHT_WORD_MATCH
+    private static final int WEIGHT_EXACT_MATCH = 35000; // must be higher than WEIGHT_WORD_MATCH
     private static final int WEIGHT_PART_MATCH = 15000;
     private static final int WEIGHT_FEATURE_ADM = 4500; // this will be SUBTRACTED
 
@@ -66,9 +67,19 @@ public class AltNamesFilter implements ResultFilter {
                 // query contains candidate name
                 weight = WEIGHT_PART_MATCH;
             }
+            else if( DefaultDocFactory.FEATURES_ADM1.contains(candidateLoc.getFeatureCombined()) &&
+                            query.contains(candidateLoc.getAdmin1Code()) ){
+                // query contains ADM1 code
+                weight = WEIGHT_PART_MATCH;
+            }
+            else if( DefaultDocFactory.FEATURES_COUNTRIES.contains(candidateLoc.getFeatureCombined()) &&
+                    query.contains(candidateLoc.getCountryCode()) ){
+                // query contains country code
+                weight = WEIGHT_PART_MATCH;
+            }
 
-            if(candidateLoc.getFeatureCombined().startsWith("A.ADM")){
-                // downvote everything which looks like state
+            if( DefaultDocFactory.FEATURES_ADM1.contains(candidateLoc.getFeatureCombined()) && i!=0 ){
+                // downvote everything which looks like ADM1 NOT at first place
                 weight -= WEIGHT_FEATURE_ADM;
             }
 

@@ -54,15 +54,15 @@ public class DefaultDocFactory implements DocFactory {
         result.setName(source.get(TextSearcherLucene.FIELD_NAME_NAME));
         result.setOfficialName(source.get(TextSearcherLucene.FIELD_NAME_OFFICIAL));
 
-        //If alternate names are empty put name as actual name
-        //This covers missing data and equals weight for later computation
-        if (source.get(TextSearcherLucene.FIELD_NAME_ALTERNATE_NAMES).isEmpty()){
+        String altNames = source.get(TextSearcherLucene.FIELD_NAME_ALT_NAMES_BIG);
+        if (altNames.isEmpty()){
             result.setAlternateNames(source.get(TextSearcherLucene.FIELD_NAME_NAME));
         }else{
-            result.setAlternateNames(source.get(TextSearcherLucene.FIELD_NAME_ALTERNATE_NAMES));
+            result.setAlternateNames(altNames);
         }
+
         result.setCountryCode(source.get(TextSearcherLucene.FIELD_NAME_COUNTRY_CODE));
-        result.setAdmin1Code(source.get(TextSearcherLucene.FIELD_NAME_ADMIN1_CODE));
+        result.setAdmin1Code(source.get(TextSearcherLucene.FIELD_NAME_ADM1_CODE));
         result.setFeatureCombined(source.get(TextSearcherLucene.FIELD_NAME_FEATURE_COMBINED));
         result.setTimezone(source.get(TextSearcherLucene.FIELD_NAME_TIMEZONE));
         return result;
@@ -146,12 +146,11 @@ public class DefaultDocFactory implements DocFactory {
 
         // this info just stored in index, we not going to search it
         doc.add(new StoredField(TextSearcherLucene.FIELD_NAME_ID, ID));
-        doc.add(new StoredField(TextSearcherLucene.FIELD_NAME_ALTERNATE_NAMES, alternatenames));
         doc.add(new StoredField(TextSearcherLucene.FIELD_NAME_TIMEZONE, timezone));
 
         // this info used for search
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_NAME, name, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ALTERNATE_NAMES_BIG, searchFields.alternatenamesBig, Field.Store.YES));
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ALT_NAMES_BIG, searchFields.alternatenamesBig, Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMB2, searchFields.combinations2, Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMB3, searchFields.combinations3, Field.Store.YES));
 
@@ -159,8 +158,8 @@ public class DefaultDocFactory implements DocFactory {
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_OFFICIAL, nameOfficial, Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_FEATURE_COMBINED, combinedFeature, Field.Store.YES));
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COUNTRY_CODE, countryCode, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ADMIN1_CODE, admin1Code, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ADMIN2_CODE, admin2Code, Field.Store.YES));
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ADM1_CODE, admin1Code, Field.Store.YES));
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ADM2_CODE, admin2Code, Field.Store.YES));
 
         return doc;
     }
@@ -212,12 +211,12 @@ public class DefaultDocFactory implements DocFactory {
             myAltNameList.addAll(alternateNamesList);
 
             for (String altName : myAltNameList) {
-                appendToBuilder(combinations3build, altName, countryCode);
+                appendToBuilder(alternatenamesBigBuild, altName, countryCode);
                 if(countryLoc!=null) {
-                    appendToBuilder(combinations3build, altName, countryLoc.getName());
+                    appendToBuilder(alternatenamesBigBuild, altName, countryLoc.getName());
                     if (countryLoc.getAlternateNamesList() != null) {
                         for (String altCountry : countryLoc.getAlternateNamesList()) {
-                            appendToBuilder(combinations3build, altName, altCountry);
+                            appendToBuilder(alternatenamesBigBuild, altName, altCountry);
                         }
                     }
                 }
@@ -246,7 +245,6 @@ public class DefaultDocFactory implements DocFactory {
     }
 
     private void appendAdm1Combinations(StringBuilder combinations2build, StringBuilder alternatenamesBigBuild, String admin1Code, Location adm1Loc, String name, List<String> alternateNamesList) {
-        // this location is not an ADM1/state
         if(adm1Loc!=null){
             appendToBuilder(alternatenamesBigBuild, name, admin1Code);
             appendToBuilder(alternatenamesBigBuild, name, adm1Loc.getName());

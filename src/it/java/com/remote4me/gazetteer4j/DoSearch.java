@@ -664,7 +664,7 @@ public class DoSearch {
 
         city="Washington, D.C.";
         loc = runSearchReturnLocation(city);
-        Assert.assertEquals(city, loc.getOfficialName());
+        Assert.assertEquals(city, loc.getName());
         Assert.assertEquals("US", loc.getCountryCode());
         Assert.assertEquals("DC", loc.getAdmin1Code());
 
@@ -817,13 +817,11 @@ public class DoSearch {
         String city;
         Location loc;
 
-        /*
-        city = "CA, USA";
+        city = "CA USA";
         loc = runSearchReturnLocation(city);
         Assert.assertEquals("CA", loc.getAdmin1Code());
         Assert.assertEquals("US", loc.getCountryCode());
         Assert.assertEquals("California", loc.getName());
-        */
 
         city = "California, USA";
         loc = runSearchReturnLocation(city);
@@ -831,11 +829,105 @@ public class DoSearch {
         Assert.assertEquals("US", loc.getCountryCode());
         Assert.assertEquals("California", loc.getName());
 
+        city = "TX, USA";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("TX", loc.getAdmin1Code());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("Texas", loc.getName());
+
         city = "Texas, USA";
         loc = runSearchReturnLocation(city);
         Assert.assertEquals("TX", loc.getAdmin1Code());
         Assert.assertEquals("US", loc.getCountryCode());
         Assert.assertEquals("Texas", loc.getName());
+
+        city = "Georgia, USA";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("GA", loc.getAdmin1Code());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("Georgia", loc.getName());
+
+        city = "GA, USA";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("GA", loc.getAdmin1Code());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("Georgia", loc.getName());
+
+        city = "New Mexico, USA";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("NM", loc.getAdmin1Code());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("New Mexico", loc.getName());
+
+        city = "NM, USA";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("NM", loc.getAdmin1Code());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("New Mexico", loc.getName());
+
+        /***********************************************/
+
+        city = "CA US";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("CA", loc.getAdmin1Code());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("California", loc.getName());
+
+        city = "California, US";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("CA", loc.getAdmin1Code());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("California", loc.getName());
+
+        city = "TX, US";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("TX", loc.getAdmin1Code());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("Texas", loc.getName());
+
+        city = "Texas, US";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("TX", loc.getAdmin1Code());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("Texas", loc.getName());
+
+        city = "Georgia, US";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("GA", loc.getAdmin1Code());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("Georgia", loc.getName());
+
+        city = "GA, US";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("GA", loc.getAdmin1Code());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("Georgia", loc.getName());
+
+        city = "New Mexico, US";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("NM", loc.getAdmin1Code());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("New Mexico", loc.getName());
+
+        city = "NM, US";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("NM", loc.getAdmin1Code());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("New Mexico", loc.getName());
+
+        /***********************************************/
+
+        city = "CA United States";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("CA", loc.getAdmin1Code());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("California", loc.getName());
+
+        city = "California, United States";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("CA", loc.getAdmin1Code());
+        Assert.assertEquals("US", loc.getCountryCode());
+        Assert.assertEquals("California", loc.getName());
 
     }
 

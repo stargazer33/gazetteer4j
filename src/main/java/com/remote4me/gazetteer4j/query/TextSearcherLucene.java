@@ -67,16 +67,13 @@ public class TextSearcherLucene implements TextSearcher {
     public static final String FIELD_NAME_ID = "ID";
     public static final String FIELD_NAME_NAME = "name";
     public static final String FIELD_NAME_OFFICIAL = "official";
-    public static final String FIELD_NAME_ALTERNATE_NAMES = "alternatenames";
-    public static final String FIELD_NAME_ALTERNATE_NAMES_BIG = "alternatenamesBig";
-    public static final String FIELD_NAME_COMB2 = "combinationsa";
+    public static final String FIELD_NAME_ALT_NAMES_BIG = "altnamesBig";
+    public static final String FIELD_NAME_COMB2 = "comb2";
     public static final String FIELD_NAME_COMB3 = "comb3";
-
-    public static final String FIELD_NAME_FEATURE_CODE = "featureCode";
     public static final String FIELD_NAME_FEATURE_COMBINED = "featureCombined";
     public static final String FIELD_NAME_COUNTRY_CODE = "countryCode";
-    public static final String FIELD_NAME_ADMIN1_CODE = "admin1Code";
-    public static final String FIELD_NAME_ADMIN2_CODE = "admin2Code";
+    public static final String FIELD_NAME_ADM1_CODE = "adm1Code";
+    public static final String FIELD_NAME_ADM2_CODE = "adm2Code";
     public static final String FIELD_NAME_POPULATION = "population";
     public static final String FIELD_NAME_TIMEZONE = "timezone";
 
@@ -104,14 +101,14 @@ public class TextSearcherLucene implements TextSearcher {
 
         Map<String, Float> boosts = new HashMap<>();
         boosts.put(FIELD_NAME_NAME, (float) 1000);
-        boosts.put(FIELD_NAME_ALTERNATE_NAMES_BIG, (float) 100);
+        boosts.put(FIELD_NAME_ALT_NAMES_BIG, (float) 100);
         boosts.put(FIELD_NAME_COMB2, (float) 10);
         boosts.put(FIELD_NAME_COMB3, (float) 1);
 
         queryParser = new MultiFieldQueryParser(
                 new String[]{
                         FIELD_NAME_NAME,
-                        FIELD_NAME_ALTERNATE_NAMES_BIG,
+                        FIELD_NAME_ALT_NAMES_BIG,
                         FIELD_NAME_COMB2,
                         FIELD_NAME_COMB3
                 },
