@@ -91,6 +91,11 @@ public class DoSearch {
         Assert.assertTrue(loc.getFeatureCombined().startsWith("A.PCLI"));
         Assert.assertEquals("GE", loc.getCountryCode());
 
+        city = "Grenada";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Grenada", loc.getOfficialName());
+        Assert.assertEquals("GD", loc.getCountryCode());
+
         city = "Cuba"; // Cuba as country, not Santiago de Cuba as city!
         loc = runSearchReturnLocation(city);
         Assert.assertTrue(loc.getOfficialName().contains("Cuba"));
@@ -428,6 +433,12 @@ public class DoSearch {
         Assert.assertEquals("US", loc.getCountryCode());
         Assert.assertEquals("PA", loc.getAdmin1Code());
 
+        city="Mexico City";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals(city, loc.getOfficialName());
+        Assert.assertEquals("MX", loc.getCountryCode());
+        Assert.assertTrue(loc.getFeatureCombined().startsWith("P.PPL"));
+
     }
 
 
@@ -536,7 +547,25 @@ public class DoSearch {
         Assert.assertEquals("Odessa", loc.getOfficialName());
         Assert.assertEquals("UA", loc.getCountryCode());
 
+        city = "Granada, Spain";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Granada", loc.getOfficialName());
+        Assert.assertEquals("ES", loc.getCountryCode());
 
+        city = "Perth, Australia";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Perth", loc.getName());
+        Assert.assertEquals("AU", loc.getCountryCode());
+
+        city = "Perth, Scotland";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Perth", loc.getName());
+        Assert.assertEquals("GB", loc.getCountryCode());
+
+        city = "Perth, UK";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Perth", loc.getName());
+        Assert.assertEquals("GB", loc.getCountryCode());
 
     }
 

@@ -56,6 +56,9 @@ class AlternateNamesFromFile {
         record = idToRecordMap.get(6252001);
         record.namesList.add("USA");
 
+        record = idToRecordMap.get(2635167);
+        record.namesList.add("UK");
+
         record = idToRecordMap.get(5128581);
         record.namesList.add("NYC");
     }
