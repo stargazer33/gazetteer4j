@@ -185,10 +185,17 @@ public class DefaultDocFactory implements DocFactory {
         }
 
         StringBuilder combinations2build = new StringBuilder();
+        StringBuilder combinations3build = new StringBuilder();
         StringBuilder alternatenamesBigBuild = new StringBuilder(alternatenames);
 
         if ( FEATURES_CITIES.contains(combinedFeature) ){
 
+            combinations3build = computeCombination3(
+                    name,
+                    nameOfficial,
+                    combinedFeature,
+                    adm1Loc,
+                    countryLoc);
         }
         else if (FEATURES_ADM1.contains(combinedFeature)) {
 
@@ -211,16 +218,16 @@ public class DefaultDocFactory implements DocFactory {
 
         if( !FEATURES_ADM1.contains(combinedFeature) )
         {
-            appendAdm1Combinations(combinations2build, alternatenamesBigBuild, admin1Code, adm1Loc, name, alternateNamesList);
+            appendAdm1Combinations(
+                    combinations2build,
+                    alternatenamesBigBuild,
+                    admin1Code,
+                    adm1Loc,
+                    name,
+                    alternateNamesList);
 
         }
 
-        StringBuilder combinations3build = computeCombination3(
-                name,
-                nameOfficial,
-                combinedFeature,
-                adm1Loc,
-                countryLoc);
 
         SearchFields searchFields = new SearchFields();
         searchFields.combinations2 = combinations2build.toString();
