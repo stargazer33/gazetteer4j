@@ -68,6 +68,11 @@ public class DefaultDocFactory implements DocFactory {
         return result;
     }
 
+    static class SearchFields {
+        String alternatenamesBig;
+        String combinations2;
+        String combinations3;
+    }
 
     /**
      * Create Lucene Document from input
@@ -115,7 +120,7 @@ public class DefaultDocFactory implements DocFactory {
         String combinedFeature = tokens[6] + "." + tokens[7];
 
         String nameOfficial = name;
-        StringBuilder combinations2 = new StringBuilder();
+        StringBuilder combinations2build = new StringBuilder();
         AlternateNameRecord alternateRecord = idToAlternateMap.get(ID);
         List<String> alternateNamesList;
         if (alternateRecord != null) {
@@ -125,57 +130,51 @@ public class DefaultDocFactory implements DocFactory {
             }
         } else {
             alternateNamesList = new ArrayList<>();
-            /*
-            alternateNamesList.add(name);
-            if( !nameOfficial.equals(name) ) {
-                alternateNamesList.add(nameOfficial);
-            }
-            */
             alternateNamesList.addAll(Arrays.asList(alternatenames.split(",")));
         }
 
-        StringBuilder alternatenamesBig = new StringBuilder(alternatenames);
+        StringBuilder alternatenamesBigBuild = new StringBuilder(alternatenames);
         Location adm1Loc = adm1ToIdMap.get(countryCode+"."+admin1Code);
         Location coutryLoc = countryToIdMap.get(countryCode);
 
         if (coutryLoc != null) {
-            appendToBuilder(alternatenamesBig, name, countryCode);
-            appendToBuilder(alternatenamesBig, name, coutryLoc.getName());
-            appendToBuilder(alternatenamesBig, name, coutryLoc.getOfficialName());
+            appendToBuilder(alternatenamesBigBuild, name, countryCode);
+            appendToBuilder(alternatenamesBigBuild, name, coutryLoc.getName());
+            appendToBuilder(alternatenamesBigBuild, name, coutryLoc.getOfficialName());
             if (coutryLoc.getAlternateNamesList() != null) {
                 for (String altCountry : coutryLoc.getAlternateNamesList()) {
-                    appendToBuilder(alternatenamesBig, name, altCountry);
+                    appendToBuilder(alternatenamesBigBuild, name, altCountry);
                 }
             }
 
             // combinations
             for (String altName : alternateNamesList) {
-                appendToBuilder(combinations2, altName, countryCode);
-                appendToBuilder(combinations2, altName, coutryLoc.getName());
+                appendToBuilder(combinations2build, altName, countryCode);
+                appendToBuilder(combinations2build, altName, coutryLoc.getName());
             }
         }
         if( !FEATURES_ADM1.contains(combinedFeature) )
         {
             // this location is not an ADM1/state
             if(adm1Loc!=null){
-                appendToBuilder(alternatenamesBig, name, admin1Code);
-                appendToBuilder(alternatenamesBig, name, adm1Loc.getName());
-                appendToBuilder(alternatenamesBig, name, adm1Loc.getOfficialName());
+                appendToBuilder(alternatenamesBigBuild, name, admin1Code);
+                appendToBuilder(alternatenamesBigBuild, name, adm1Loc.getName());
+                appendToBuilder(alternatenamesBigBuild, name, adm1Loc.getOfficialName());
                 if(adm1Loc.getAlternateNamesList()!=null){
                     for (String altAdm1 : adm1Loc.getAlternateNamesList()) {
-                        appendToBuilder(alternatenamesBig, name, altAdm1);
+                        appendToBuilder(alternatenamesBigBuild, name, altAdm1);
                     }
                 }
 
                 // combinations
                 for (String altName : alternateNamesList) {
-                    appendToBuilder(combinations2, altName, admin1Code);
-                    appendToBuilder(combinations2, altName, adm1Loc.getName());
+                    appendToBuilder(combinations2build, altName, admin1Code);
+                    appendToBuilder(combinations2build, altName, adm1Loc.getName());
                 }
             }
         }
 
-        StringBuilder combinations3=new StringBuilder();
+        StringBuilder combinations3build=new StringBuilder();
         if ( FEATURES_CITIES.contains(combinedFeature) &&
                 adm1Loc != null &&
                 adm1Loc.getAlternateNamesList() != null &&
@@ -194,16 +193,21 @@ public class DefaultDocFactory implements DocFactory {
             for (String altCity : cityNames) {
                 for (String altCountry : coutryLoc.getAlternateNamesList()) {
                     for (String altAdm1 : myAltAdm1) {
-                        combinations3.append(",");
-                        combinations3.append(altCity);
-                        combinations3.append(" ");
-                        combinations3.append(altAdm1);
-                        combinations3.append(" ");
-                        combinations3.append(altCountry);
+                        combinations3build.append(",");
+                        combinations3build.append(altCity);
+                        combinations3build.append(" ");
+                        combinations3build.append(altAdm1);
+                        combinations3build.append(" ");
+                        combinations3build.append(altCountry);
                     }
                 }
             }
         }
+
+        SearchFields searchFields = new SearchFields();
+        searchFields.combinations2 = combinations2build.toString();
+        searchFields.combinations3 = combinations3build.toString();
+        searchFields.alternatenamesBig = alternatenamesBigBuild.toString();
 
         Document doc = new Document();
 
@@ -214,9 +218,9 @@ public class DefaultDocFactory implements DocFactory {
 
         // this info used for search
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_NAME, name, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ALTERNATE_NAMES_BIG, alternatenamesBig.toString(), Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMB2, combinations2.toString(), Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMB3, combinations3.toString(), Field.Store.YES));
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ALTERNATE_NAMES_BIG, searchFields.alternatenamesBig, Field.Store.YES));
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMB2, searchFields.combinations2, Field.Store.YES));
+        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMB3, searchFields.combinations3, Field.Store.YES));
 
         // this info CAN be used for search
         doc.add(new TextField(TextSearcherLucene.FIELD_NAME_OFFICIAL, nameOfficial, Field.Store.YES));
