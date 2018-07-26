@@ -207,6 +207,21 @@ public class DefaultDocFactory implements DocFactory {
         }
         else if (FEATURES_ADM1.contains(combinedFeature)) {
 
+            List<String> myAltNameList = new ArrayList<>();
+            myAltNameList.add(admin1Code);
+            myAltNameList.addAll(alternateNamesList);
+
+            for (String altName : myAltNameList) {
+                appendToBuilder(combinations3build, altName, countryCode);
+                if(countryLoc!=null) {
+                    appendToBuilder(combinations3build, altName, countryLoc.getName());
+                    if (countryLoc.getAlternateNamesList() != null) {
+                        for (String altCountry : countryLoc.getAlternateNamesList()) {
+                            appendToBuilder(combinations3build, altName, altCountry);
+                        }
+                    }
+                }
+            }
         }
         else if (FEATURES_COUNTRIES.contains(combinedFeature)){
 
