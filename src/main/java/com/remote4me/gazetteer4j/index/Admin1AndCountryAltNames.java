@@ -84,7 +84,7 @@ class Admin1AndCountryAltNames {
         result.setAdmin1Code(admin1Code);
         result.setAlternateNames(alternatenames);
         if(alternate!=null) {
-            result.setAlternateNamesList(alternate.names);
+            result.setAlternateNamesList(alternate.namesList);
         }
         return result;
     }

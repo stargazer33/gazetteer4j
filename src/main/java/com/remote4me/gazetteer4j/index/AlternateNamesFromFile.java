@@ -54,10 +54,10 @@ class AlternateNamesFromFile {
         AlternateNameRecord record;
 
         record = idToRecordMap.get(6252001);
-        record.names.add("USA");
+        record.namesList.add("USA");
 
         record = idToRecordMap.get(5128581);
-        record.names.add("NYC");
+        record.namesList.add("NYC");
     }
 
     private void processOneLine(String[] tokens) throws IOException {
@@ -95,7 +95,7 @@ class AlternateNamesFromFile {
             if (isShortName.contains("1")) {
                 record.shortName = alternateName;
             }
-            record.names.add(alternateName);
+            record.namesList.add(alternateName);
         }
     }
 

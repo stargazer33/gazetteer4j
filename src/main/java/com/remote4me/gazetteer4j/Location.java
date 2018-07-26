@@ -17,6 +17,7 @@
 
 package com.remote4me.gazetteer4j;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ public class Location {
     private String featureCombined;
 
     private transient String alternateNames;
-    private transient List<String> alternateNamesList;
+    private transient List<String> alternateNamesList=new ArrayList<>(2);
     private transient int weight;
 
     public static final Double OUT_OF_BOUNDS = 999999.0;

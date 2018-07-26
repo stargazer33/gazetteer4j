@@ -12,7 +12,7 @@ public class AlternateNameRecord {
     public int id;
     public String preferredName;
     public String shortName;
-    public List<String> names = new ArrayList();
+    public List<String> namesList = new ArrayList();
 
     @Override
     public boolean equals(Object o) {
