@@ -51,15 +51,13 @@ import java.util.logging.Logger;
  */
 public class TextSearcherLucene implements TextSearcher {
 
-    private QueryParser queryParser;
-
-    private IndexSearcher indexSearcher;
-
-    private DocFactory docFactory;
-
-    private ResultFilter resultFilter = new AltNamesFilter();
-
     private static final Logger LOG = Logger.getLogger(TextSearcherLucene.class.getName());
+
+    private QueryParser queryParser;
+    private IndexSearcher indexSearcher;
+    private DocFactory docFactory;
+    private ResultFilter resultFilter;
+
 
     /**
      * Below constants define name of field in lucene index
@@ -82,14 +80,14 @@ public class TextSearcherLucene implements TextSearcher {
     /**
      * Creates a query with given parameters
      *
-     * @param indexPath the path to lucene index
+     * @param indexSearcher provides access to Lucene index
      * @param analyzer the query-time analyzer
-     * @param docFactory will be used to create instances of Location from Lucene index
-     * @param resultFilter will be used to filter/sort results
+     * @param docFactory used to create instances of Location from Lucene index
+     * @param resultFilter used to filter/sort query results
      * @throws IOException when something went wrong
      */
     public TextSearcherLucene(
-            String indexPath,
+            IndexSearcher indexSearcher,
             Analyzer analyzer,
             DocFactory docFactory,
             ResultFilter resultFilter
@@ -116,7 +114,7 @@ public class TextSearcherLucene implements TextSearcher {
                 boosts
             );
         queryParser.setDefaultOperator(QueryParser.Operator.OR);
-        indexSearcher = new IndexSearcher(createIndexReader(indexPath));
+        this.indexSearcher = indexSearcher;
     }
 
     /**
@@ -170,14 +168,6 @@ public class TextSearcherLucene implements TextSearcher {
                 count);
     }
 
-    private IndexReader createIndexReader(String indexerPath) throws IOException {
-        File indexfile = new File(indexerPath);
-        Directory indexDir = FSDirectory.open(indexfile.toPath());
 
-        if (!DirectoryReader.indexExists(indexDir)) {
-            throw new IOException("No Lucene Index Directory Found !");
-        }
-        return DirectoryReader.open(indexDir);
-    }
 
 }

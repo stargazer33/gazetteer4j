@@ -3,6 +3,7 @@ package com.remote4me.gazetteer4j;
 import com.remote4me.gazetteer4j.index.DefaultDocFactory;
 import com.remote4me.gazetteer4j.index.Location;
 import com.remote4me.gazetteer4j.query.AltNamesFilter;
+import com.remote4me.gazetteer4j.query.BuildIndexSearcher;
 import com.remote4me.gazetteer4j.query.TextSearcherLucene;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -24,14 +25,12 @@ public class DoSearch {
 
     @Before
     public void setUp() throws IOException {
-        // query = TextSearcherComposite.createDefaultCompositeSearcher();
         searcher = new TextSearcherLucene(
-                INDEX_CITIES_15000,
-                new StandardAnalyzer(),
-                new DefaultDocFactory(),
-                new AltNamesFilter()
+            new BuildIndexSearcher().createSearcher(INDEX_CITIES_15000),
+            new StandardAnalyzer(),
+            new DefaultDocFactory(),
+            new AltNamesFilter()
         );
-
     }
 
     private Location runSearchReturnLocation(String geoStr) throws IOException, ParseException
