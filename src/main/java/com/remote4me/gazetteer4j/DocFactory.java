@@ -1,6 +1,6 @@
 package com.remote4me.gazetteer4j;
 
-import com.remote4me.gazetteer4j.index.AlternateNameRecord;
+import com.remote4me.gazetteer4j.index.AltNameRecord;
 import com.remote4me.gazetteer4j.index.Location;
 import org.apache.lucene.document.Document;
 
@@ -32,7 +32,7 @@ public interface DocFactory {
      */
     Document createFromLineInGeonamesFile(
             String[] lineFromFile,
-            Map<Integer, AlternateNameRecord> idToAlternateMap,
+            Map<Integer, AltNameRecord> idToAlternateMap,
             Map<String, Location> adm1ToIdMap,
             Map<String, Location> countryToIdMap) throws IOException;
 

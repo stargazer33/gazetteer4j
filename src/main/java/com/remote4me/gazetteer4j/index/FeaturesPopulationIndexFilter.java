@@ -19,20 +19,20 @@ class FeaturesPopulationIndexFilter implements IndexFilter {
 
     @Override
     public boolean shouldAddToIndex(String[] lineFromFile) {
-        switch (lineFromFile[6]){ // featureClass
-            case "P":
-                int population = 0;
-                try {
-                    population = Integer.parseInt(lineFromFile[14]);
-                } catch (NumberFormatException e) {
-                    population = 0;// Treat as population does not exists
-                }
-                if (population > minPopulation) {
-                    return delegate.shouldAddToIndex(lineFromFile);
-                }
-                return false;
-            default:
+        if( GeonamesUtils.isCity(lineFromFile[6] + "." + lineFromFile[7]) )
+        {
+            int population = 0;
+            try {
+                population = Integer.parseInt(lineFromFile[14]);
+            } catch (NumberFormatException e) {
+                population = 0;// Treat as population does not exists
+            }
+            if (population > minPopulation) {
                 return delegate.shouldAddToIndex(lineFromFile);
+            }
+            return false;
         }
+
+        return delegate.shouldAddToIndex(lineFromFile);
     }
 }

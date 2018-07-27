@@ -23,19 +23,19 @@ public class CompositeIndexBuilder {
             return;
         }
 
-        AlternateNamesFromFile alternateNames = new AlternateNamesFromFile();
+        AltNameMapBuilder alternateNames = new AltNameMapBuilder();
         alternateNames.init( FileSystem.GEONAMES_ALTERNAME_NAMES_FILE);
         // key: geoname id
-        // value: AlternateNameRecord
-        Map<Integer, AlternateNameRecord> iIdToRecordMap = alternateNames.getIdToRecordMap();
+        // value: AltNameRecord
+        Map<Integer, AltNameRecord> iIdToRecordMap = alternateNames.getIdToRecordMap();
 
 
-        // admin1CountryNames provides
-        //   ADM1 -> Location map
-        // CCode  -> Location map
-        Admin1AndCountryAltNames admin1AndCountryAltNames = new Admin1AndCountryAltNames(iIdToRecordMap);
-        admin1AndCountryAltNames.init(FileSystem.GEONAMES_MAIN_FILE_ALL_COUNTRIES);
-
+        // codeToLocationBuilder provides:
+        //   map:    ADM1 code -> Location
+        //   map: country code -> Location
+        //
+        CodeToLocationBuilder codeToLocationBuilder = new CodeToLocationBuilder(iIdToRecordMap);
+        codeToLocationBuilder.init(FileSystem.GEONAMES_MAIN_FILE_ALL_COUNTRIES);
 
         IndexBuilder indexBuilder;
         indexBuilder = new IndexBuilder(
@@ -46,8 +46,8 @@ public class CompositeIndexBuilder {
                         15000
                 ),
                 iIdToRecordMap,
-                admin1AndCountryAltNames.getAdm1ToLocationMap(),
-                admin1AndCountryAltNames.getCcodeToLocationMap()
+                codeToLocationBuilder.getAdm1ToLocationMap(),
+                codeToLocationBuilder.getCcodeToLocationMap()
         );
         indexBuilder.init(
                 FileSystem.GEONAMES_MAIN_FILE_ALL_COUNTRIES,

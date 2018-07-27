@@ -2,12 +2,11 @@ package com.remote4me.gazetteer4j.index;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by dima2 on 21.07.18.
  */
-public class AlternateNameRecord {
+public class AltNameRecord {
 
     public int id;
     public String preferredName;
@@ -17,13 +16,11 @@ public class AlternateNameRecord {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AlternateNameRecord)) return false;
-        AlternateNameRecord that = (AlternateNameRecord) o;
+        if (!(o instanceof AltNameRecord)) return false;
+        AltNameRecord that = (AltNameRecord) o;
         return id == that.id;
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+    public int hashCode() { return id; }
 }

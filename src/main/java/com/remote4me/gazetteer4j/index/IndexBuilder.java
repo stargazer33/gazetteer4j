@@ -27,7 +27,7 @@ public class IndexBuilder {
     private Analyzer analyzer;
     private DocFactory docFactory;
     private IndexFilter indexFilter;
-    private Map<Integer, AlternateNameRecord> idToAlternateMap;
+    private Map<Integer, AltNameRecord> idToAlternateMap;
     private int count = 0;
     private Map<String, Location> adm1ToIdMap;
     private Map<String, Location> countryToIdMap;
@@ -44,7 +44,7 @@ public class IndexBuilder {
     public IndexBuilder(Analyzer analyzer,
                         DocFactory docFactory,
                         IndexFilter indexFilter,
-                        Map<Integer, AlternateNameRecord> idToAlternateMap,
+                        Map<Integer, AltNameRecord> idToAlternateMap,
                         Map<String, Location> adm1ToIdMap,
                         Map<String, Location> countryToIdMap)
     {

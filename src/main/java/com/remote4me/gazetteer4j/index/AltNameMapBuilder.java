@@ -12,14 +12,14 @@ import java.util.stream.Stream;
 /**
  *
  */
-class AlternateNamesFromFile {
+class AltNameMapBuilder {
 
-    private static final Logger LOG = Logger.getLogger(AlternateNamesFromFile.class.getName());
+    private static final Logger LOG = Logger.getLogger(AltNameMapBuilder.class.getName());
 
     /**
      * key: geoname id
      */
-    private Map<Integer, AlternateNameRecord> idToRecordMap = new HashMap<>();
+    private Map<Integer, AltNameRecord> idToRecordMap = new HashMap<>();
 
     private int count = 1;
 
@@ -49,7 +49,7 @@ class AlternateNamesFromFile {
     }
 
     private void addCustomNames() {
-        AlternateNameRecord record;
+        AltNameRecord record;
 
         record = idToRecordMap.get(6252001);
         record.namesList.add("USA");
@@ -84,9 +84,9 @@ class AlternateNamesFromFile {
         }
 
         if (isolanguage.equals("en")){
-            AlternateNameRecord record = idToRecordMap.get(id);
+            AltNameRecord record = idToRecordMap.get(id);
             if (record == null) {
-                record = new AlternateNameRecord();
+                record = new AltNameRecord();
                 idToRecordMap.put(id, record);
             }
 
@@ -100,7 +100,7 @@ class AlternateNamesFromFile {
         }
     }
 
-    public Map<Integer, AlternateNameRecord> getIdToRecordMap() {
+    public Map<Integer, AltNameRecord> getIdToRecordMap() {
         return idToRecordMap;
     }
 }

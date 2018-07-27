@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 /**
  * Created by dima2 on 21.07.18.
  */
-class Admin1AndCountryAltNames {
+class CodeToLocationBuilder {
 
     /**
      * key: adm1 code
@@ -24,17 +24,17 @@ class Admin1AndCountryAltNames {
      */
     protected Map<String, Location> cCodeToLocation = new HashMap<>();
 
-    private static final Logger LOG = Logger.getLogger(AlternateNamesFromFile.class.getName());
+    private static final Logger LOG = Logger.getLogger(CodeToLocationBuilder.class.getName());
 
     private int count = 1;
 
-    private Map<Integer, AlternateNameRecord> idToAltnameMap;
+    private Map<Integer, AltNameRecord> idToAltnameMap;
 
-    public Admin1AndCountryAltNames(Map<Integer, AlternateNameRecord> idToAltnameMap) {
+    public CodeToLocationBuilder(Map<Integer, AltNameRecord> idToAltnameMap) {
         this.idToAltnameMap = idToAltnameMap;
     }
 
-    protected void processOneLine(String[] tokens) throws IOException {
+    protected void processOneLine(String[] tokens) {
         int ID = Integer.parseInt(tokens[0]);
         String featureClass = tokens[6];    // char(1)
         String featureCode = tokens[7];     // more granular category
@@ -65,7 +65,7 @@ class Admin1AndCountryAltNames {
         Location result = new Location();
 
         String nameOfficial = name;
-        AlternateNameRecord alternate = idToAltnameMap.get(ID);
+        AltNameRecord alternate = idToAltnameMap.get(ID);
         if(alternate!=null){
             if(alternate.shortName != null){
                 name = alternate.shortName;
@@ -90,20 +90,13 @@ class Admin1AndCountryAltNames {
 
         try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
             stream.forEach((String line) ->
-                    {
-                        if (count % 1000000 == 0) {
-                            LOG.log(Level.INFO, "" + count);
-                        }
-                        String[] tokens = line.split("\t");
-                        try {
-
-                            processOneLine(tokens);
-                            count++;
-
-                        } catch (IOException e) {
-                            throw new IllegalStateException(e);
-                        }
+                {
+                    if (count % 1000000 == 0) {
+                        LOG.log(Level.INFO, "" + count);
                     }
+                    processOneLine(line.split("\t"));
+                    count++;
+                }
             );
         }
 

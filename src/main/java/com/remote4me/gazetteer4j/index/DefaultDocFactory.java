@@ -1,9 +1,6 @@
 package com.remote4me.gazetteer4j.index;
 
 import com.remote4me.gazetteer4j.DocFactory;
-import com.remote4me.gazetteer4j.index.AlternateNameRecord;
-import com.remote4me.gazetteer4j.index.GeonamesUtils;
-import com.remote4me.gazetteer4j.index.Location;
 import com.remote4me.gazetteer4j.query.TextSearcherLucene;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -64,7 +61,7 @@ public class DefaultDocFactory implements DocFactory {
     @Override
     public Document createFromLineInGeonamesFile(
             String[] tokens,
-            Map<Integer, AlternateNameRecord> idToAlternateMap,
+            Map<Integer, AltNameRecord> idToAlternateMap,
             Map<String, Location> adm1ToIdMap,
             Map<String, Location> countryToIdMap) {
 
@@ -100,7 +97,7 @@ public class DefaultDocFactory implements DocFactory {
         String combinedFeature = tokens[6] + "." + tokens[7];
 
         String nameOfficial = name;
-        AlternateNameRecord altRecord = idToAlternateMap.get(ID);
+        AltNameRecord altRecord = idToAlternateMap.get(ID);
         Location adm1Loc = adm1ToIdMap.get(countryCode+"."+admin1Code);
         Location countryLoc = countryToIdMap.get(countryCode);
 
@@ -151,7 +148,7 @@ public class DefaultDocFactory implements DocFactory {
             String countryCode,
             String admin1Code,
             String altNamesOrig,
-            AlternateNameRecord altRecord,
+            AltNameRecord altRecord,
             Location adm1Loc,
             Location countryLoc)
     {

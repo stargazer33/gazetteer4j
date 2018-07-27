@@ -1,12 +1,18 @@
 package com.remote4me.gazetteer4j.utils;
 
+import com.remote4me.gazetteer4j.index.CompositeIndexBuilder;
+import com.remote4me.gazetteer4j.index.DefaultDocFactory;
 import com.remote4me.gazetteer4j.index.Location;
 import com.remote4me.gazetteer4j.TextSearcher;
-import com.remote4me.gazetteer4j.query.TextSearcherComposite;
+import com.remote4me.gazetteer4j.query.AltNamesFilter;
+import com.remote4me.gazetteer4j.query.TextSearcherLucene;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
 import java.io.PrintStream;
 import java.util.List;
 import java.util.logging.Logger;
+
+import static com.remote4me.gazetteer4j.FileSystem.INDEX_CITIES_15000;
 
 /**
  * Usage:
@@ -28,7 +34,12 @@ public class CmdSearch {
         }
 
         System.out.println("Searching for: "+text);
-        TextSearcher textSearcher = TextSearcherComposite.createDefaultCompositeSearcher();
+        TextSearcher textSearcher = new TextSearcherLucene(
+            INDEX_CITIES_15000,
+            new StandardAnalyzer(),
+            new DefaultDocFactory(),
+            new AltNamesFilter()
+        );
         List<Location> result = textSearcher.search( text, 10);
         writeResult(result, System.out);
     }
