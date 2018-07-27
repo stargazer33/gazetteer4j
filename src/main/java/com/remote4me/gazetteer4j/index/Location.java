@@ -17,8 +17,6 @@
 
 package com.remote4me.gazetteer4j.index;
 
-import com.remote4me.gazetteer4j.index.GeonamesUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +31,7 @@ public class Location {
     private String countryCode;
     private String admin1Code;
     private String timezone;
-    private String featureCombined;
+    private String feature;
 
     private String alternateNames;
     private List<String> alternateNamesList=new ArrayList<>(2);
@@ -112,21 +110,18 @@ public class Location {
         sb.append(", officialName='").append(officialName).append('\'');
         sb.append(", countryCode='").append(countryCode).append('\'');
         sb.append(", admin1Code='").append(admin1Code).append('\'');
-        sb.append(", feature='").append(featureCombined).append('\'');
+        sb.append(", feature='").append(feature).append('\'');
         sb.append(", timezone='").append(timezone).append('\'');
         sb.append('}');
         return sb.toString();
     }
 
-    public void setFeatureCombined(String featureCombined) {
-        this.featureCombined = featureCombined;
+    public void setFeature(String feature) {
+        this.feature = feature;
     }
 
-    public String getFeatureCombined() {
-        return featureCombined;
-    }
-    public String getFeatureCombinedFirst3char() {
-        return featureCombined.substring(0,3);
+    public String getFeature() {
+        return feature;
     }
 
     public void setAlternateNamesList(List<String> alternateNamesList) {

@@ -43,7 +43,7 @@ public class DefaultDocFactory implements DocFactory {
         result.setId(ID);
         result.setName(name);
         result.setOfficialName(nameOfficial);
-        result.setFeatureCombined(combinedFeature);
+        result.setFeature(combinedFeature);
         result.setCountryCode(countryCode);
         result.setAdmin1Code(admin1Code);
         result.setAlternateNames(alternatenames);
@@ -71,7 +71,7 @@ public class DefaultDocFactory implements DocFactory {
 
         result.setCountryCode(source.get(DocFactory.FIELD_NAME_COUNTRY_CODE));
         result.setAdmin1Code(source.get(DocFactory.FIELD_NAME_ADM1_CODE));
-        result.setFeatureCombined(source.get(DocFactory.FIELD_NAME_FEATURE_COMBINED));
+        result.setFeature(source.get(DocFactory.FIELD_NAME_FEATURE_COMBINED));
         result.setTimezone(source.get(DocFactory.FIELD_NAME_TIMEZONE));
         return result;
     }

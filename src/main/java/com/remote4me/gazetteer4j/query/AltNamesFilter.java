@@ -65,18 +65,18 @@ public class AltNamesFilter implements ResultFilter {
                 // query contains candidate name
                 weight = WEIGHT_PART_MATCH;
             }
-            else if( candidateLoc.isAdm1(candidateLoc.getFeatureCombined()) &&
+            else if( candidateLoc.isAdm1(candidateLoc.getFeature()) &&
                             query.contains(candidateLoc.getAdmin1Code()) ){
                 // query contains ADM1 code
                 weight = WEIGHT_PART_MATCH;
             }
-            else if( candidateLoc.isCountry(candidateLoc.getFeatureCombined()) &&
+            else if( candidateLoc.isCountry(candidateLoc.getFeature()) &&
                     query.contains(candidateLoc.getCountryCode()) ){
                 // query contains country code
                 weight = WEIGHT_PART_MATCH;
             }
 
-            if( candidateLoc.isAdm1(candidateLoc.getFeatureCombined()) && i!=0 ){
+            if( candidateLoc.isAdm1(candidateLoc.getFeature()) && i!=0 ){
                 // downvote everything which looks like ADM1 NOT at first place
                 weight -= WEIGHT_FEATURE_ADM;
             }
