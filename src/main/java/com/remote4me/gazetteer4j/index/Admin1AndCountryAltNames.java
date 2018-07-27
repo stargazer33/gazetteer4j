@@ -46,12 +46,12 @@ class Admin1AndCountryAltNames {
         String countryCode = tokens[8];
         String admin1Code = tokens[10];     // eg US State
 
-        if(DefaultDocFactory.FEATURES_ADM1.contains(combinedFeature)){
+        if(GeonamesUtils.isAdm1(combinedFeature)){
             admCodeToLocation.put(
                     countryCode + "." + admin1Code,
                     createLocation(tokens));
         }
-        if(DefaultDocFactory.FEATURES_COUNTRIES.contains(combinedFeature)){
+        if(GeonamesUtils.isCountry(combinedFeature)){
             cCodeToLocation.put(countryCode, createLocation(tokens));
         }
     }

@@ -1,5 +1,6 @@
 package com.remote4me.gazetteer4j;
 
+import com.remote4me.gazetteer4j.index.GeonamesUtils;
 import com.remote4me.gazetteer4j.query.TextSearcherLucene;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -14,30 +15,6 @@ import java.util.function.Function;
  */
 public class DefaultDocFactory implements DocFactory {
 
-    /**
-     *  see http://download.geonames.org/export/dump/featureCodes_en.txt
-     */
-    public static final Set FEATURES_CITIES = new HashSet<>(Arrays.asList(
-            "P.PPL", "P.PPLA",
-            "P.PPLA2", "P.PPLA3", "P.PPLA3", "P.PPLA4",
-            "P.PPLC", "P.PPLCH", "P.PPLG", "P.PPLL", "P.PPLR",
-            "P.PPLS"
-    ));
-
-    public static final Set FEATURES_COUNTRIES = new HashSet<>(Arrays.asList(
-            "A.PCLI"
-    ));
-
-    public static final Set FEATURES_ADM1 = new HashSet<>(Arrays.asList(
-            "A.ADM1"
-    ));
-
-    public static final Set FEATURES_CITIES_COUNTRIES_ADM1 = new HashSet();
-    static {
-        FEATURES_CITIES_COUNTRIES_ADM1.addAll(FEATURES_CITIES);
-        FEATURES_CITIES_COUNTRIES_ADM1.addAll(FEATURES_COUNTRIES);
-        FEATURES_CITIES_COUNTRIES_ADM1.addAll(FEATURES_ADM1);
-    }
 
     public static Function<String[], Boolean> LOAD_ALL_FUNCTION = new Function<String[], Boolean>() {
         @Override
@@ -186,7 +163,7 @@ public class DefaultDocFactory implements DocFactory {
         StringBuilder comb3build = new StringBuilder();
         StringBuilder altNamesBuild = new StringBuilder(altNamesOrig);
 
-        if ( FEATURES_CITIES.contains(combinedFeature) ){
+        if ( GeonamesUtils.isCity(combinedFeature) ){
             comb3build = computeCombination3(
                     name,
                     nameOfficial,
@@ -203,7 +180,7 @@ public class DefaultDocFactory implements DocFactory {
                     altNamesOrigList);
 
         }
-        else if (FEATURES_ADM1.contains(combinedFeature)) {
+        else if (GeonamesUtils.isAdm1(combinedFeature)) {
 
             List<String> myAltNameList = new ArrayList<>();
             myAltNameList.add(admin1Code);
@@ -219,7 +196,7 @@ public class DefaultDocFactory implements DocFactory {
                 }
             }
         }
-        else if (FEATURES_COUNTRIES.contains(combinedFeature)){
+        else if (GeonamesUtils.isCountry(combinedFeature)){
 
         }
         else {

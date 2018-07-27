@@ -17,6 +17,8 @@
 
 package com.remote4me.gazetteer4j;
 
+import com.remote4me.gazetteer4j.index.GeonamesUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -133,5 +135,17 @@ public class Location {
 
     public List<String> getAlternateNamesList() {
         return alternateNamesList;
+    }
+
+    public boolean isCity(String featureCode){
+        return GeonamesUtils.isCity(featureCode);
+    }
+
+    public boolean isCountry(String featureCode){
+        return GeonamesUtils.isCountry(featureCode);
+    }
+
+    public boolean isAdm1(String featureCode){
+        return GeonamesUtils.isAdm1(featureCode);
     }
 }

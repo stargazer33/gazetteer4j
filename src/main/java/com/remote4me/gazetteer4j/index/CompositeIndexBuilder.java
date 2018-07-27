@@ -44,7 +44,7 @@ public class CompositeIndexBuilder {
                 new StandardAnalyzer(),
                 new DefaultDocFactory(),
                 new FeaturesPopulationIndexFilter(
-                        DefaultDocFactory.FEATURES_CITIES_COUNTRIES_ADM1,
+                        GeonamesUtils.FEATURES_CITIES_COUNTRIES_ADM1,
                         15000
                 ),
                 iIdToRecordMap,
