@@ -10,17 +10,47 @@ import java.util.*;
 import java.util.function.Function;
 
 /**
- * Created by dima2 on 12.07.18.
+ * TODO
  */
 public class DefaultDocFactory implements DocFactory {
 
+    @Override
+    public Location createLocation(
+            String[] lineFromFile,
+            Map<Integer, AltNameRecord> idToAltnameMap)
+    {
+        int ID = Integer.parseInt(lineFromFile[0]);
+        String name = lineFromFile[1];
+        String alternatenames = lineFromFile[3];
+        String featureClass = lineFromFile[6];    // char(1)
+        String featureCode = lineFromFile[7];     // more granular category
+        String combinedFeature = featureClass + "."+featureCode;
 
-    public static Function<String[], Boolean> LOAD_ALL_FUNCTION = new Function<String[], Boolean>() {
-        @Override
-        public Boolean apply(String[] fields) {
-            return true;
+        String countryCode = lineFromFile[8];
+        String admin1Code = lineFromFile[10];     // eg US State
+        Location result = new Location();
+
+        String nameOfficial = name;
+        AltNameRecord alternate = idToAltnameMap.get(ID);
+        if(alternate!=null){
+            if(alternate.shortName != null){
+                name = alternate.shortName;
+            }
         }
-    };
+
+        result.setId(ID);
+        result.setName(name);
+        result.setOfficialName(nameOfficial);
+        result.setFeatureCombined(combinedFeature);
+        result.setCountryCode(countryCode);
+        result.setAdmin1Code(admin1Code);
+        result.setAlternateNames(alternatenames);
+        if(alternate!=null) {
+            result.setAlternateNamesList(alternate.namesList);
+        }
+        return result;
+    }
+
 
     @Override
     public Location createFromLuceneDocument(Document source) {
@@ -52,48 +82,48 @@ public class DefaultDocFactory implements DocFactory {
 
     /**
      * Create Lucene Document from input
-     * @param tokens
+     * @param lineFromFile
      * @param idToAlternateMap
      * @param adm1ToIdMap
      * @param countryToIdMap
      */
     @Override
     public Document createFromLineInGeonamesFile(
-            String[] tokens,
+            String[] lineFromFile,
             Map<Integer, AltNameRecord> idToAlternateMap,
             Map<String, Location> adm1ToIdMap,
             Map<String, Location> countryToIdMap) {
 
-        int ID = Integer.parseInt(tokens[0]);
-        String name = tokens[1];
-        String altNames = tokens[3];
+        int ID = Integer.parseInt(lineFromFile[0]);
+        String name = lineFromFile[1];
+        String altNames = lineFromFile[3];
 
         Double latitude = -999999.0;
         try {
-            latitude = Double.parseDouble(tokens[4]);
+            latitude = Double.parseDouble(lineFromFile[4]);
         } catch (NumberFormatException e) {
             latitude = Location.OUT_OF_BOUNDS;
         }
         Double longitude = -999999.0;
         try {
-            longitude = Double.parseDouble(tokens[5]);
+            longitude = Double.parseDouble(lineFromFile[5]);
         } catch (NumberFormatException e) {
             longitude = Location.OUT_OF_BOUNDS;
         }
 
         int population = 0;
         try {
-            population = Integer.parseInt(tokens[14]);
+            population = Integer.parseInt(lineFromFile[14]);
         } catch (NumberFormatException e) {
             population = 0;// Treat as population does not exists
         }
 
         // Additional fields to rank more known locations higher
-        String countryCode = tokens[8];
-        String admin1Code = tokens[10];     // eg US State
-        String admin2Code = tokens[11];     // eg county
-        String timezone = tokens[17];
-        String combinedFeature = tokens[6] + "." + tokens[7];
+        String countryCode = lineFromFile[8];
+        String admin1Code = lineFromFile[10];     // eg US State
+        String admin2Code = lineFromFile[11];     // eg county
+        String timezone = lineFromFile[17];
+        String combinedFeature = lineFromFile[6] + "." + lineFromFile[7];
 
         String nameOfficial = name;
         AltNameRecord altRecord = idToAlternateMap.get(ID);

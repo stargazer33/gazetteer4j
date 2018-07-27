@@ -1,5 +1,6 @@
 package com.remote4me.gazetteer4j.index;
 
+import com.remote4me.gazetteer4j.DocFactory;
 import com.remote4me.gazetteer4j.FileSystem;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
@@ -23,8 +24,10 @@ public class CompositeIndexBuilder {
             return;
         }
 
+        DocFactory docFactory = new DefaultDocFactory();
         AltNameMapBuilder alternateNames = new AltNameMapBuilder();
         alternateNames.init( FileSystem.GEONAMES_ALTERNAME_NAMES_FILE);
+
         // key: geoname id
         // value: AltNameRecord
         Map<Integer, AltNameRecord> iIdToRecordMap = alternateNames.getIdToRecordMap();
@@ -34,13 +37,13 @@ public class CompositeIndexBuilder {
         //   map:    ADM1 code -> Location
         //   map: country code -> Location
         //
-        CodeToLocationBuilder codeToLocationBuilder = new CodeToLocationBuilder(iIdToRecordMap);
+        CodeToLocationBuilder codeToLocationBuilder = new CodeToLocationBuilder(iIdToRecordMap, docFactory);
         codeToLocationBuilder.init(FileSystem.GEONAMES_MAIN_FILE_ALL_COUNTRIES);
 
         IndexBuilder indexBuilder;
         indexBuilder = new IndexBuilder(
                 new StandardAnalyzer(),
-                new DefaultDocFactory(),
+                docFactory,
                 new FeaturesPopulationIndexFilter(
                         GeonamesUtils.FEATURES_CITIES_COUNTRIES_ADM1,
                         15000

@@ -1,5 +1,7 @@
 package com.remote4me.gazetteer4j.index;
 
+import com.remote4me.gazetteer4j.DocFactory;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,6 +17,11 @@ import java.util.stream.Stream;
 class CodeToLocationBuilder {
 
     private static final Logger LOG = Logger.getLogger(CodeToLocationBuilder.class.getName());
+
+    /**
+     * used to create Location instances
+     */
+    private DocFactory docFactory;
 
     /**
      * key: adm1 code
@@ -40,59 +47,30 @@ class CodeToLocationBuilder {
     private int count = 1;
 
 
-    CodeToLocationBuilder(Map<Integer, AltNameRecord> idToAltnameMap) {
+    CodeToLocationBuilder(
+            Map<Integer, AltNameRecord> idToAltnameMap,
+            DocFactory docFactory
+            ) {
         this.idToAltnameMap = idToAltnameMap;
+        this.docFactory = docFactory;
     }
 
-    void processOneLine(String[] tokens) {
-
-        String featureClass = tokens[6];    // char(1)
-        String featureCode = tokens[7];     // more granular category
+    void processOneLine(String[] lineFromFile)
+    {
+        String featureClass = lineFromFile[6];    // char(1)
+        String featureCode = lineFromFile[7];     // more granular category
         String combinedFeature = featureClass + "."+featureCode;
-        String countryCode = tokens[8];
-        String admin1Code = tokens[10];     // eg US State
+        String countryCode = lineFromFile[8];
+        String admin1Code = lineFromFile[10];     // eg US State
 
         if(GeonamesUtils.isAdm1(combinedFeature)){
             admCodeToLocation.put(
                     countryCode + "." + admin1Code,
-                    createLocation(tokens));
+                    docFactory.createLocation(lineFromFile, idToAltnameMap));
         }
         if(GeonamesUtils.isCountry(combinedFeature)){
-            cCodeToLocation.put(countryCode, createLocation(tokens));
+            cCodeToLocation.put(countryCode, docFactory.createLocation(lineFromFile, idToAltnameMap));
         }
-    }
-
-    Location createLocation(String[] tokens) {
-        int ID = Integer.parseInt(tokens[0]);
-        String name = tokens[1];
-        String alternatenames = tokens[3];
-        String featureClass = tokens[6];    // char(1)
-        String featureCode = tokens[7];     // more granular category
-        String combinedFeature = featureClass + "."+featureCode;
-
-        String countryCode = tokens[8];
-        String admin1Code = tokens[10];     // eg US State
-        Location result = new Location();
-
-        String nameOfficial = name;
-        AltNameRecord alternate = idToAltnameMap.get(ID);
-        if(alternate!=null){
-            if(alternate.shortName != null){
-                name = alternate.shortName;
-            }
-        }
-
-        result.setId(ID);
-        result.setName(name);
-        result.setOfficialName(nameOfficial);
-        result.setFeatureCombined(combinedFeature);
-        result.setCountryCode(countryCode);
-        result.setAdmin1Code(admin1Code);
-        result.setAlternateNames(alternatenames);
-        if(alternate!=null) {
-            result.setAlternateNamesList(alternate.namesList);
-        }
-        return result;
     }
 
     void init(String fileName) throws IOException {

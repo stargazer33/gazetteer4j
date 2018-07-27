@@ -30,6 +30,17 @@ public interface DocFactory {
     String FIELD_NAME_TIMEZONE = "timezone";
 
     /**
+     *
+     * @param lineFromFile each element - a column in a row from Geonames file
+     * @param idToAltnameMap key: geoname ID; this map used to get prefered/short names and alt. namesList
+     * @return
+     */
+    Location createLocation(
+            String[] lineFromFile,
+            Map<Integer, AltNameRecord> idToAltnameMap
+    );
+
+    /**
      * Document -> Location; usually this happens during query time
      *
      * @param source a Lucene document (usually from Lucene index)
@@ -40,7 +51,7 @@ public interface DocFactory {
     /**
      * (Main) Geonames file -> Document; usually this happens during index time
      *
-     * @param lineFromFile each element - a column in a line from Geonames file
+     * @param lineFromFile each element - a column in a row from Geonames file
      * @param idToAlternateMap key: geoname ID; this map used to get prefered/short names;
      *                         add alt. names can be added to index
      * @param adm1ToLocMap to access ADM1 Location
