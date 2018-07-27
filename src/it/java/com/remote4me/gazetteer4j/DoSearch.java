@@ -89,7 +89,7 @@ public class DoSearch {
 
         city="Georgia";
         loc = runSearchReturnLocation(city);
-        Assert.assertTrue(loc.isCountry());
+        Assert.assertEquals("Georgia", loc.getNamePreferred());
         Assert.assertEquals("GE", loc.getCountryCode());
         Assert.assertEquals(true,  loc.isCountry());
 
@@ -106,6 +106,7 @@ public class DoSearch {
 
         city = "USA";
         loc = runSearchReturnLocation(city);
+        Assert.assertEquals("United States", loc.getNamePreferred());
         Assert.assertTrue(loc.getNameOfficial().contains("United"));
         Assert.assertEquals(true,  loc.isCountry());
 
@@ -121,26 +122,34 @@ public class DoSearch {
 
         city = "Germany";
         loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Germany", loc.getNamePreferred());
+        Assert.assertTrue(loc.getNameOfficial().contains("Germany"));
+        Assert.assertEquals(true,  loc.isCountry());
+
+        city = "Deutschland";
+        loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Germany", loc.getNamePreferred());
         Assert.assertTrue(loc.getNameOfficial().contains("Germany"));
         Assert.assertEquals(true,  loc.isCountry());
 
         city = "Costa Rica";
         loc = runSearchReturnLocation(city);
-        Assert.assertTrue(loc.getNameOfficial().contains("Costa Rica"));
+        Assert.assertEquals("Costa Rica", loc.getNamePreferred());
         Assert.assertEquals(true,  loc.isCountry());
 
         city = "Canada";
         loc = runSearchReturnLocation(city);
-        Assert.assertTrue(loc.getNameOfficial().contains("Canada"));
+        Assert.assertEquals("Canada", loc.getNamePreferred());
         Assert.assertEquals(true,  loc.isCountry());
 
         city = "Mexico";
         loc = runSearchReturnLocation(city);
-        Assert.assertTrue(loc.getNameOfficial().contains("Mexico"));
+        Assert.assertEquals("Mexico", loc.getNamePreferred());
         Assert.assertEquals(true,  loc.isCountry());
 
         city = "Luxembourg";
         loc = runSearchReturnLocation(city);
+        Assert.assertEquals("Luxembourg", loc.getNamePreferred());
         Assert.assertTrue(loc.getNameOfficial().contains("Luxembourg"));
         Assert.assertEquals(true,  loc.isCountry());
 
@@ -297,6 +306,7 @@ public class DoSearch {
 
         city="Berlin";
         loc = runSearchReturnLocation(city);
+        Assert.assertEquals(city, loc.getNamePreferred());
         Assert.assertEquals(city, loc.getNameOfficial());
         Assert.assertTrue(loc.isCity());
         Assert.assertEquals("DE", loc.getCountryCode());
@@ -455,7 +465,6 @@ public class DoSearch {
         Assert.assertTrue(loc.isCity());
         Assert.assertEquals(city, loc.getNameOfficial());
         Assert.assertEquals("MX", loc.getCountryCode());
-        Assert.assertTrue(loc.isCity());
 
     }
 
