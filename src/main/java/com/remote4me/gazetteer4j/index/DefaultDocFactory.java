@@ -41,14 +41,14 @@ public class DefaultDocFactory implements DocFactory {
         }
 
         result.setId(ID);
-        result.setName(name);
-        result.setOfficialName(nameOfficial);
+        result.setNamePreferred(name);
+        result.setNameOfficial(nameOfficial);
         result.setFeature(combinedFeature);
         result.setCountryCode(countryCode);
         result.setAdmin1Code(admin1Code);
-        result.setAlternateNames(alternatenames);
+        result.setAltNames(alternatenames);
         if(alternate!=null) {
-            result.setAlternateNamesList(alternate.namesList);
+            result.setAltNamesList(alternate.namesList);
         }
         return result;
     }
@@ -59,14 +59,14 @@ public class DefaultDocFactory implements DocFactory {
 
         Location result = new Location();
 
-        result.setName(source.get(DocFactory.FIELD_NAME_NAME));
-        result.setOfficialName(source.get(DocFactory.FIELD_NAME_OFFICIAL));
+        result.setNamePreferred(source.get(DocFactory.FIELD_NAME_NAME));
+        result.setNameOfficial(source.get(DocFactory.FIELD_NAME_OFFICIAL));
 
         String altNames = source.get(DocFactory.FIELD_NAME_ALT_NAMES_BIG);
         if (altNames.isEmpty()){
-            result.setAlternateNames(source.get(DocFactory.FIELD_NAME_NAME));
+            result.setAltNames(source.get(DocFactory.FIELD_NAME_NAME));
         }else{
-            result.setAlternateNames(altNames);
+            result.setAltNames(altNames);
         }
 
         result.setCountryCode(source.get(DocFactory.FIELD_NAME_COUNTRY_CODE));
@@ -219,8 +219,8 @@ public class DefaultDocFactory implements DocFactory {
             for (String altName : myAltNameList) {
                 appendToBuilder(altNamesBuild, altName, countryCode);
                 if(countryLoc!=null) {
-                    appendToBuilder(altNamesBuild, altName, countryLoc.getName());
-                    for (String altCountry : countryLoc.getAlternateNamesList()) {
+                    appendToBuilder(altNamesBuild, altName, countryLoc.getNamePreferred());
+                    for (String altCountry : countryLoc.getAltNamesList()) {
                         appendToBuilder(altNamesBuild, altName, altCountry);
                     }
                 }
@@ -258,16 +258,16 @@ public class DefaultDocFactory implements DocFactory {
     {
         if(loc!=null){
             appendToBuilder(altNamesBuild, name, code);
-            appendToBuilder(altNamesBuild, name, loc.getName());
-            appendToBuilder(altNamesBuild, name, loc.getOfficialName());
-            for (String locAltName : loc.getAlternateNamesList()) {
+            appendToBuilder(altNamesBuild, name, loc.getNamePreferred());
+            appendToBuilder(altNamesBuild, name, loc.getNameOfficial());
+            for (String locAltName : loc.getAltNamesList()) {
                 appendToBuilder(altNamesBuild, name, locAltName);
             }
 
             // combinations
             for (String altName : altNamesList) {
                 appendToBuilder(combBuild, altName, code);
-                appendToBuilder(combBuild, altName, loc.getName());
+                appendToBuilder(combBuild, altName, loc.getNamePreferred());
             }
         }
     }
@@ -281,9 +281,9 @@ public class DefaultDocFactory implements DocFactory {
     {
         StringBuilder combinations3build=new StringBuilder();
         if ( adm1Loc != null &&
-             adm1Loc.getAlternateNamesList() != null &&
+             adm1Loc.getAltNamesList() != null &&
              countryLoc != null &&
-             countryLoc.getAlternateNamesList() != null )
+             countryLoc.getAltNamesList() != null )
         {
             // this is a city with adm1 and country
             List<String> cityNames=new ArrayList<>();
@@ -293,9 +293,9 @@ public class DefaultDocFactory implements DocFactory {
             }
             List<String> myAltAdm1 = new ArrayList<>();
             myAltAdm1.add(adm1Loc.getAdmin1Code());
-            myAltAdm1.addAll(adm1Loc.getAlternateNamesList());
+            myAltAdm1.addAll(adm1Loc.getAltNamesList());
             for (String altCity : cityNames) {
-                for (String altCountry : countryLoc.getAlternateNamesList()) {
+                for (String altCountry : countryLoc.getAltNamesList()) {
                     for (String altAdm1 : myAltAdm1) {
                         combinations3build.append(",");
                         combinations3build.append(altCity);

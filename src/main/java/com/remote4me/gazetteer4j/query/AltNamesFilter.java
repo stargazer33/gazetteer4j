@@ -26,7 +26,6 @@ public class AltNamesFilter implements ResultFilter {
     /**
      * @param luceneSearchResults the data to filter
      * @param query Lucene query used to produce luceneSearchResults
-     * @param queryParts same as query, just in different format
      * @param count limits the size of result
      * @return the filtered/sorted luceneSearchResults
      */
@@ -50,39 +49,42 @@ public class AltNamesFilter implements ResultFilter {
         for (int i = 0; i < luceneSearchResults.size(); ++i) {
             int weight = 0;
             Location candidateLoc = luceneSearchResults.get(i);
-            String candidateNameAsWord = String.format(" %s ", candidateLoc.getName());
+            String candidateNameAsWord = String.format(" %s ", candidateLoc.getNamePreferred());
 
             if (isExactMatch(query, candidateLoc))
             {
                 // exact match -> highest weight!
                 weight = WEIGHT_EXACT_MATCH;
             }
-            else if (candidateNameAsWord.contains(String.format(" %s ", query))) {
+            else if (candidateNameAsWord.contains(String.format(" %s ", query)))
+            {
                 // candidate name contains query as a word
                 weight = WEIGHT_WORD_MATCH;
             }
-            else if ( query.contains(candidateLoc.getName()) ) {
+            else if ( query.contains(candidateLoc.getNamePreferred()) )
+            {
                 // query contains candidate name
                 weight = WEIGHT_PART_MATCH;
             }
-            else if( candidateLoc.isAdm1(candidateLoc.getFeature()) &&
-                            query.contains(candidateLoc.getAdmin1Code()) ){
+            else if( candidateLoc.isAdm1() && query.contains(candidateLoc.getAdmin1Code()) )
+            {
                 // query contains ADM1 code
                 weight = WEIGHT_PART_MATCH;
             }
-            else if( candidateLoc.isCountry(candidateLoc.getFeature()) &&
-                    query.contains(candidateLoc.getCountryCode()) ){
+            else if( candidateLoc.isCountry() && query.contains(candidateLoc.getCountryCode()) )
+            {
                 // query contains country code
                 weight = WEIGHT_PART_MATCH;
             }
 
-            if( candidateLoc.isAdm1(candidateLoc.getFeature()) && i!=0 ){
-                // downvote everything which looks like ADM1 NOT at first place
+            if( candidateLoc.isAdm1() && i!=0 )
+            {
+                // downvote everything which looks like ADM1 and NOT at first place in result list
                 weight -= WEIGHT_FEATURE_ADM;
             }
 
             // get all alternate names of candidateLoc
-            String[] altNames = candidateLoc.getAlternateNames().split(",");
+            String[] altNames = candidateLoc.getAltNames().split(",");
             float altEditDist = 0;
             for (String altName : altNames) {
                 if (altName.contains(query)) {
@@ -110,8 +112,8 @@ public class AltNamesFilter implements ResultFilter {
 
     public boolean isExactMatch(String query, Location candidateLoc)
     {
-        return  candidateLoc.getName().equals(query) ||
-                candidateLoc.getOfficialName().equals(query);
+        return  candidateLoc.getNamePreferred().equals(query) ||
+                candidateLoc.getNameOfficial().equals(query);
     }
 
     /**

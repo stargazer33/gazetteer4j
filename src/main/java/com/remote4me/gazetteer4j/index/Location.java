@@ -25,19 +25,58 @@ import java.util.List;
  */
 public class Location {
 
+    public static final Double OUT_OF_BOUNDS = 999999.0;
+
     private int id;
-    private String name;
-    private String officialName;
+    private String namePreferred;
+    private String nameOfficial;
     private String countryCode;
     private String admin1Code;
     private String timezone;
     private String feature;
 
-    private String alternateNames;
-    private List<String> alternateNamesList=new ArrayList<>(2);
+    private String altNames;
+    private List<String> altNamesList =new ArrayList<>(2);
     private int weight;
 
-    public static final Double OUT_OF_BOUNDS = 999999.0;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Location)) return false;
+        Location location = (Location) o;
+        return id == location.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Location{");
+        sb.append(" namePreferred='").append(namePreferred).append('\'');
+        sb.append(", nameOfficial='").append(nameOfficial).append('\'');
+        sb.append(", feature='").append(feature).append('\'');
+        sb.append(", countryCode='").append(countryCode).append('\'');
+        sb.append(", admin1Code='").append(admin1Code).append('\'');
+        sb.append(", timezone='").append(timezone).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
+
+    public boolean isCity(){
+        return GeonamesUtils.isCity(feature);
+    }
+
+    public boolean isCountry(){
+        return GeonamesUtils.isCountry(feature);
+    }
+
+    public boolean isAdm1(){
+        return GeonamesUtils.isAdm1(feature);
+    }
+
 
     public int getId() {
         return id;
@@ -47,20 +86,20 @@ public class Location {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getNamePreferred() {
+        return namePreferred;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNamePreferred(String namePreferred) {
+        this.namePreferred = namePreferred;
     }
 
-    public String getAlternateNames() {
-        return alternateNames;
+    public String getAltNames() {
+        return altNames;
     }
 
-    public void setAlternateNames(String alternateNames) {
-        this.alternateNames = alternateNames;
+    public void setAltNames(String altNames) {
+        this.altNames = altNames;
     }
 
     public String getCountryCode() {
@@ -87,12 +126,12 @@ public class Location {
         this.weight = weight;
     }
 
-    public void setOfficialName(String officialName) {
-        this.officialName = officialName;
+    public void setNameOfficial(String nameOfficial) {
+        this.nameOfficial = nameOfficial;
     }
 
-    public String getOfficialName() {
-        return officialName;
+    public String getNameOfficial() {
+        return nameOfficial;
     }
 
     public String getTimezone() {
@@ -103,19 +142,6 @@ public class Location {
         this.timezone = timezone;
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Location{");
-        sb.append("name='").append(name).append('\'');
-        sb.append(", officialName='").append(officialName).append('\'');
-        sb.append(", countryCode='").append(countryCode).append('\'');
-        sb.append(", admin1Code='").append(admin1Code).append('\'');
-        sb.append(", feature='").append(feature).append('\'');
-        sb.append(", timezone='").append(timezone).append('\'');
-        sb.append('}');
-        return sb.toString();
-    }
-
     public void setFeature(String feature) {
         this.feature = feature;
     }
@@ -124,23 +150,12 @@ public class Location {
         return feature;
     }
 
-    public void setAlternateNamesList(List<String> alternateNamesList) {
-        this.alternateNamesList = alternateNamesList;
+    public void setAltNamesList(List<String> altNamesList) {
+        this.altNamesList = altNamesList;
     }
 
-    public List<String> getAlternateNamesList() {
-        return alternateNamesList;
+    public List<String> getAltNamesList() {
+        return altNamesList;
     }
 
-    public boolean isCity(String featureCode){
-        return GeonamesUtils.isCity(featureCode);
-    }
-
-    public boolean isCountry(String featureCode){
-        return GeonamesUtils.isCountry(featureCode);
-    }
-
-    public boolean isAdm1(String featureCode){
-        return GeonamesUtils.isAdm1(featureCode);
-    }
 }
