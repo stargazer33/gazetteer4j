@@ -35,9 +35,9 @@ public class Location {
     private String timezone;
     private String featureCombined;
 
-    private transient String alternateNames;
-    private transient List<String> alternateNamesList=new ArrayList<>(2);
-    private transient int weight;
+    private String alternateNames;
+    private List<String> alternateNamesList=new ArrayList<>(2);
+    private int weight;
 
     public static final Double OUT_OF_BOUNDS = 999999.0;
 

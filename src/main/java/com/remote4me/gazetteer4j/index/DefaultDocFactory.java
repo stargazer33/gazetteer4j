@@ -6,8 +6,10 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.TextField;
 
-import java.util.*;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * TODO
@@ -170,7 +172,7 @@ public class DefaultDocFactory implements DocFactory {
         return doc;
     }
 
-    private SearchFields computeSearchFields(
+    SearchFields computeSearchFields(
             String name,
             String nameOfficial,
             String combinedFeature,
@@ -196,7 +198,6 @@ public class DefaultDocFactory implements DocFactory {
             comb3build = computeCombination3(
                     name,
                     nameOfficial,
-                    combinedFeature,
                     adm1Loc,
                     countryLoc);
 
@@ -226,7 +227,7 @@ public class DefaultDocFactory implements DocFactory {
             }
         }
         else if (GeonamesUtils.isCountry(combinedFeature)){
-
+            // nothing special for country
         }
         else {
             throw new IllegalStateException("Unknown feature: "+combinedFeature);
@@ -248,7 +249,7 @@ public class DefaultDocFactory implements DocFactory {
         return searchFields;
     }
 
-    private void appendCombinations(
+    void appendCombinations(
             StringBuilder combBuild,
             StringBuilder altNamesBuild,
             String code,
@@ -272,7 +273,12 @@ public class DefaultDocFactory implements DocFactory {
     }
 
 
-    private StringBuilder computeCombination3(String name, String nameOfficial, String combinedFeature, Location adm1Loc, Location countryLoc) {
+    StringBuilder computeCombination3(
+            String name,
+            String nameOfficial,
+            Location adm1Loc,
+            Location countryLoc)
+    {
         StringBuilder combinations3build=new StringBuilder();
         if ( adm1Loc != null &&
              adm1Loc.getAlternateNamesList() != null &&

@@ -25,18 +25,18 @@ public class CompositeIndexBuilder {
         }
 
         DocFactory docFactory = new DefaultDocFactory();
-        AltNameMapBuilder alternateNames = new AltNameMapBuilder();
-        alternateNames.init( FileSystem.GEONAMES_ALTERNAME_NAMES_FILE);
 
-        // key: geoname id
-        // value: AltNameRecord
+        AltNameMapBuilder alternateNames = new AltNameMapBuilder();
+        alternateNames.init(FileSystem.GEONAMES_ALTERNAME_NAMES_FILE);
+        // in this map:
+        //      key: geoname id
+        //      value: AltNameRecord
         Map<Integer, AltNameRecord> iIdToRecordMap = alternateNames.getIdToRecordMap();
 
 
-        // codeToLocationBuilder provides:
-        //   map:    ADM1 code -> Location
-        //   map: country code -> Location
-        //
+        // provides:
+        //      adm1CodeToLocationMap
+        //      cCodeToLocationMap
         CodeToLocationBuilder codeToLocationBuilder = new CodeToLocationBuilder(iIdToRecordMap, docFactory);
         codeToLocationBuilder.init(FileSystem.GEONAMES_MAIN_FILE_ALL_COUNTRIES);
 
@@ -44,7 +44,7 @@ public class CompositeIndexBuilder {
         indexBuilder = new IndexBuilder(
                 new StandardAnalyzer(),
                 docFactory,
-                new FeaturesPopulationIndexFilter(
+                new WhiteListPopulationIndexFilter(
                         GeonamesUtils.FEATURES_CITIES_COUNTRIES_ADM1,
                         15000
                 ),
@@ -55,9 +55,6 @@ public class CompositeIndexBuilder {
         indexBuilder.init(
                 FileSystem.GEONAMES_MAIN_FILE_ALL_COUNTRIES,
                 FileSystem.INDEX_CITIES_15000);
-
-
     }
-
 
 }

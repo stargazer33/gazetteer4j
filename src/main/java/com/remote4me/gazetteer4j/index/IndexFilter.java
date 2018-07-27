@@ -1,7 +1,8 @@
 package com.remote4me.gazetteer4j.index;
 
 /**
- * Created by dima2 on 24.07.18.
+ * Index-time geoname record filter:
+ * used to filter the lines from main Geonames file when adding to Lucene index.
  */
 public interface IndexFilter {
     /**

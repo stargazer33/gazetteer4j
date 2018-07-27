@@ -3,17 +3,17 @@ package com.remote4me.gazetteer4j.index;
 import java.util.Set;
 
 /**
- * This implementation of index-time geoname record filter uses TWO criteria:
+ * This implementation of index-time Geoname record filter uses TWO criteria:
  * the white list of features (for all records) and
- * the minPopulation (for records of featureClass "P")
+ * the minPopulation (for cities)
  */
-class FeaturesPopulationIndexFilter implements IndexFilter {
+class WhiteListPopulationIndexFilter implements IndexFilter {
 
-    private FeaturesIndexFilter delegate;
+    private WhiteListIndexFilter delegate;
     private int minPopulation;
 
-    public FeaturesPopulationIndexFilter(Set featuresWhitelist, int minPopulation){
-        delegate = new FeaturesIndexFilter(featuresWhitelist);
+    public WhiteListPopulationIndexFilter(Set whitelist, int minPopulation){
+        delegate = new WhiteListIndexFilter(whitelist);
         this.minPopulation = minPopulation;
     }
 

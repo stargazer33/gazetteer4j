@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * Factory methods to create Location from Lucene Document,
- * to create Lucene Document from Geoname file
+ * to create Lucene Document from a line in main Geonames file.
  */
 public interface DocFactory {
 

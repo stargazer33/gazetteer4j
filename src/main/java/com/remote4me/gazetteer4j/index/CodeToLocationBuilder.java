@@ -27,13 +27,13 @@ class CodeToLocationBuilder {
      * key: adm1 code
      * value: adm1 Location
      */
-    private  Map<String, Location> admCodeToLocation = new HashMap<>();
+    private  Map<String, Location> adm1CodeToLocationMap = new HashMap<>();
 
     /**
      * key: country code
      * value: country Location
      */
-    private  Map<String, Location> cCodeToLocation = new HashMap<>();
+    private  Map<String, Location> cCodeToLocationMap = new HashMap<>();
 
     /**
      * Key: Geonames ID
@@ -64,12 +64,12 @@ class CodeToLocationBuilder {
         String admin1Code = lineFromFile[10];     // eg US State
 
         if(GeonamesUtils.isAdm1(combinedFeature)){
-            admCodeToLocation.put(
+            adm1CodeToLocationMap.put(
                     countryCode + "." + admin1Code,
                     docFactory.createLocation(lineFromFile, idToAltnameMap));
         }
         if(GeonamesUtils.isCountry(combinedFeature)){
-            cCodeToLocation.put(countryCode, docFactory.createLocation(lineFromFile, idToAltnameMap));
+            cCodeToLocationMap.put(countryCode, docFactory.createLocation(lineFromFile, idToAltnameMap));
         }
     }
 
@@ -93,10 +93,10 @@ class CodeToLocationBuilder {
 
 
     Map<String,Location> getAdm1ToLocationMap() {
-        return admCodeToLocation;
+        return adm1CodeToLocationMap;
     }
 
     Map<String,Location> getCcodeToLocationMap() {
-        return cCodeToLocation;
+        return cCodeToLocationMap;
     }
 }
