@@ -270,7 +270,7 @@ public class DoSearch {
         Assert.assertEquals("US", loc.getCountryCode());
         Assert.assertEquals("CA", loc.getAdmin1Code());
 
-        // "Porto" in Portugal works only with correct WEIGHT_NAME_EXACT_MATCH value
+        // "Porto" in Portugal
         city="Porto";
         loc = runSearchReturnLocation(city);
         Assert.assertTrue(loc.isCity());
