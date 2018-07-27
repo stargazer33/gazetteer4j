@@ -1,7 +1,6 @@
 package com.remote4me.gazetteer4j.index;
 
 import com.remote4me.gazetteer4j.DocFactory;
-import com.remote4me.gazetteer4j.query.TextSearcherLucene;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StoredField;
@@ -28,20 +27,20 @@ public class DefaultDocFactory implements DocFactory {
 
         Location result = new Location();
 
-        result.setName(source.get(TextSearcherLucene.FIELD_NAME_NAME));
-        result.setOfficialName(source.get(TextSearcherLucene.FIELD_NAME_OFFICIAL));
+        result.setName(source.get(DocFactory.FIELD_NAME_NAME));
+        result.setOfficialName(source.get(DocFactory.FIELD_NAME_OFFICIAL));
 
-        String altNames = source.get(TextSearcherLucene.FIELD_NAME_ALT_NAMES_BIG);
+        String altNames = source.get(DocFactory.FIELD_NAME_ALT_NAMES_BIG);
         if (altNames.isEmpty()){
-            result.setAlternateNames(source.get(TextSearcherLucene.FIELD_NAME_NAME));
+            result.setAlternateNames(source.get(DocFactory.FIELD_NAME_NAME));
         }else{
             result.setAlternateNames(altNames);
         }
 
-        result.setCountryCode(source.get(TextSearcherLucene.FIELD_NAME_COUNTRY_CODE));
-        result.setAdmin1Code(source.get(TextSearcherLucene.FIELD_NAME_ADM1_CODE));
-        result.setFeatureCombined(source.get(TextSearcherLucene.FIELD_NAME_FEATURE_COMBINED));
-        result.setTimezone(source.get(TextSearcherLucene.FIELD_NAME_TIMEZONE));
+        result.setCountryCode(source.get(DocFactory.FIELD_NAME_COUNTRY_CODE));
+        result.setAdmin1Code(source.get(DocFactory.FIELD_NAME_ADM1_CODE));
+        result.setFeatureCombined(source.get(DocFactory.FIELD_NAME_FEATURE_COMBINED));
+        result.setTimezone(source.get(DocFactory.FIELD_NAME_TIMEZONE));
         return result;
     }
 
@@ -122,21 +121,21 @@ public class DefaultDocFactory implements DocFactory {
         Document doc = new Document();
 
         // this info just stored in index, we not going to search it
-        doc.add(new StoredField(TextSearcherLucene.FIELD_NAME_ID, ID));
-        doc.add(new StoredField(TextSearcherLucene.FIELD_NAME_TIMEZONE, timezone));
+        doc.add(new StoredField(DocFactory.FIELD_NAME_ID, ID));
+        doc.add(new StoredField(DocFactory.FIELD_NAME_TIMEZONE, timezone));
 
         // this info used for search
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_NAME, name, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ALT_NAMES_BIG, searchFields.altNames, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMB2, searchFields.comb2, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COMB3, searchFields.comb3, Field.Store.YES));
+        doc.add(new TextField(DocFactory.FIELD_NAME_NAME, name, Field.Store.YES));
+        doc.add(new TextField(DocFactory.FIELD_NAME_ALT_NAMES_BIG, searchFields.altNames, Field.Store.YES));
+        doc.add(new TextField(DocFactory.FIELD_NAME_COMB2, searchFields.comb2, Field.Store.YES));
+        doc.add(new TextField(DocFactory.FIELD_NAME_COMB3, searchFields.comb3, Field.Store.YES));
 
         // this info CAN be used for search
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_OFFICIAL, nameOfficial, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_FEATURE_COMBINED, combinedFeature, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_COUNTRY_CODE, countryCode, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ADM1_CODE, admin1Code, Field.Store.YES));
-        doc.add(new TextField(TextSearcherLucene.FIELD_NAME_ADM2_CODE, admin2Code, Field.Store.YES));
+        doc.add(new TextField(DocFactory.FIELD_NAME_OFFICIAL, nameOfficial, Field.Store.YES));
+        doc.add(new TextField(DocFactory.FIELD_NAME_FEATURE_COMBINED, combinedFeature, Field.Store.YES));
+        doc.add(new TextField(DocFactory.FIELD_NAME_COUNTRY_CODE, countryCode, Field.Store.YES));
+        doc.add(new TextField(DocFactory.FIELD_NAME_ADM1_CODE, admin1Code, Field.Store.YES));
+        doc.add(new TextField(DocFactory.FIELD_NAME_ADM2_CODE, admin2Code, Field.Store.YES));
 
         return doc;
     }

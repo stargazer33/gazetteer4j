@@ -10,32 +10,42 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 /**
- * Created by dima2 on 21.07.18.
+ * TODO:
  */
 class CodeToLocationBuilder {
 
+    private static final Logger LOG = Logger.getLogger(CodeToLocationBuilder.class.getName());
+
     /**
      * key: adm1 code
+     * value: adm1 Location
      */
-    protected Map<String, Location> admCodeToLocation = new HashMap<>();
+    private  Map<String, Location> admCodeToLocation = new HashMap<>();
 
     /**
      * key: country code
+     * value: country Location
      */
-    protected Map<String, Location> cCodeToLocation = new HashMap<>();
+    private  Map<String, Location> cCodeToLocation = new HashMap<>();
 
-    private static final Logger LOG = Logger.getLogger(CodeToLocationBuilder.class.getName());
-
-    private int count = 1;
-
+    /**
+     * Key: Geonames ID
+     * value: AltNameRecord for ID
+     */
     private Map<Integer, AltNameRecord> idToAltnameMap;
 
-    public CodeToLocationBuilder(Map<Integer, AltNameRecord> idToAltnameMap) {
+    /**
+     * num records read
+     */
+    private int count = 1;
+
+
+    CodeToLocationBuilder(Map<Integer, AltNameRecord> idToAltnameMap) {
         this.idToAltnameMap = idToAltnameMap;
     }
 
-    protected void processOneLine(String[] tokens) {
-        int ID = Integer.parseInt(tokens[0]);
+    void processOneLine(String[] tokens) {
+
         String featureClass = tokens[6];    // char(1)
         String featureCode = tokens[7];     // more granular category
         String combinedFeature = featureClass + "."+featureCode;
@@ -52,7 +62,7 @@ class CodeToLocationBuilder {
         }
     }
 
-    private Location createLocation(String[] tokens) {
+    Location createLocation(String[] tokens) {
         int ID = Integer.parseInt(tokens[0]);
         String name = tokens[1];
         String alternatenames = tokens[3];
@@ -85,7 +95,7 @@ class CodeToLocationBuilder {
         return result;
     }
 
-    public void init(String fileName) throws IOException {
+    void init(String fileName) throws IOException {
         LOG.log(Level.INFO, "Start reading: [" + fileName + "] ");
 
         try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
@@ -104,11 +114,11 @@ class CodeToLocationBuilder {
     }
 
 
-    public Map<String,Location> getAdm1ToLocationMap() {
+    Map<String,Location> getAdm1ToLocationMap() {
         return admCodeToLocation;
     }
 
-    public Map<String,Location> getCcodeToLocationMap() {
+    Map<String,Location> getCcodeToLocationMap() {
         return cCodeToLocation;
     }
 }

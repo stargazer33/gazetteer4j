@@ -6,11 +6,9 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Search text or name of a place in Lucene index
+ * Search a name of a place in Lucene index
  */
 public interface TextSearcher {
-
-    enum GroupByField { COUNTRY, STATE }
 
     /**
      *

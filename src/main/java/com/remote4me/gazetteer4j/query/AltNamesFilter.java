@@ -34,7 +34,6 @@ public class AltNamesFilter implements ResultFilter {
     public List<Location> filter(
             List<Location> luceneSearchResults,
             String query,
-            String[] queryParts,
             int count)
     {
 

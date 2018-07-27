@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by dima2 on 21.07.18.
+ * TODO
  */
 public class AltNameRecord {
 

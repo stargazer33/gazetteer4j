@@ -23,7 +23,7 @@ class AltNameMapBuilder {
 
     private int count = 1;
 
-    public void init(String alternateFile) throws IOException {
+    void init(String alternateFile) throws IOException {
         LOG.log(Level.INFO, "Start reading: [" + alternateFile + "] ");
 
         try (Stream<String> stream = Files.lines(Paths.get(alternateFile))) {
@@ -62,11 +62,11 @@ class AltNameMapBuilder {
     }
 
     private void processOneLine(String[] tokens) throws IOException {
-        int id = 0;
-        String isolanguage = "";
-        String alternateName = "";
-        String isPreferredName = "";
-        String isShortName = "";
+        int id;
+        String isolanguage;
+        String alternateName;
+        String isPreferredName;
+        String isShortName;
 
         try {
             id = Integer.parseInt(tokens[1]);
@@ -84,11 +84,10 @@ class AltNameMapBuilder {
         }
 
         if (isolanguage.equals("en")){
-            AltNameRecord record = idToRecordMap.get(id);
-            if (record == null) {
-                record = new AltNameRecord();
-                idToRecordMap.put(id, record);
-            }
+            AltNameRecord record = idToRecordMap.computeIfAbsent(
+                    id,
+                    k -> new AltNameRecord()
+            );
 
             if (isPreferredName.contains("1")) {
                 record.preferredName = alternateName;
@@ -100,7 +99,7 @@ class AltNameMapBuilder {
         }
     }
 
-    public Map<Integer, AltNameRecord> getIdToRecordMap() {
+    Map<Integer, AltNameRecord> getIdToRecordMap() {
         return idToRecordMap;
     }
 }

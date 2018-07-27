@@ -22,18 +22,13 @@ import com.remote4me.gazetteer4j.DocFactory;
 import com.remote4me.gazetteer4j.ResultFilter;
 import com.remote4me.gazetteer4j.TextSearcher;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,31 +44,15 @@ import java.util.logging.Logger;
  *
  * Delegates filtering and sorting the results to resultFilter
  */
-public class TextSearcherLucene implements TextSearcher {
+public class DefaultTextSearcher implements TextSearcher {
 
-    private static final Logger LOG = Logger.getLogger(TextSearcherLucene.class.getName());
+    private static final Logger LOG = Logger.getLogger(DefaultTextSearcher.class.getName());
 
     private QueryParser queryParser;
     private IndexSearcher indexSearcher;
     private DocFactory docFactory;
     private ResultFilter resultFilter;
 
-
-    /**
-     * Below constants define name of field in lucene index
-     */
-    public static final String FIELD_NAME_ID = "ID";
-    public static final String FIELD_NAME_NAME = "name";
-    public static final String FIELD_NAME_OFFICIAL = "official";
-    public static final String FIELD_NAME_ALT_NAMES_BIG = "altnamesBig";
-    public static final String FIELD_NAME_COMB2 = "comb2";
-    public static final String FIELD_NAME_COMB3 = "comb3";
-    public static final String FIELD_NAME_FEATURE_COMBINED = "featureCombined";
-    public static final String FIELD_NAME_COUNTRY_CODE = "countryCode";
-    public static final String FIELD_NAME_ADM1_CODE = "adm1Code";
-    public static final String FIELD_NAME_ADM2_CODE = "adm2Code";
-    public static final String FIELD_NAME_POPULATION = "population";
-    public static final String FIELD_NAME_TIMEZONE = "timezone";
 
     private static final int MAX_HITS_NUMBER = 10;
 
@@ -86,7 +65,7 @@ public class TextSearcherLucene implements TextSearcher {
      * @param resultFilter used to filter/sort query results
      * @throws IOException when something went wrong
      */
-    public TextSearcherLucene(
+    public DefaultTextSearcher(
             IndexSearcher indexSearcher,
             Analyzer analyzer,
             DocFactory docFactory,
@@ -98,17 +77,17 @@ public class TextSearcherLucene implements TextSearcher {
         this.resultFilter = resultFilter;
 
         Map<String, Float> boosts = new HashMap<>();
-        boosts.put(FIELD_NAME_NAME, (float) 1000);
-        boosts.put(FIELD_NAME_ALT_NAMES_BIG, (float) 100);
-        boosts.put(FIELD_NAME_COMB2, (float) 10);
-        boosts.put(FIELD_NAME_COMB3, (float) 1);
+        boosts.put(DocFactory.FIELD_NAME_NAME, (float) 1000);
+        boosts.put(DocFactory.FIELD_NAME_ALT_NAMES_BIG, (float) 100);
+        boosts.put(DocFactory.FIELD_NAME_COMB2, (float) 10);
+        boosts.put(DocFactory.FIELD_NAME_COMB3, (float) 1);
 
         queryParser = new MultiFieldQueryParser(
                 new String[]{
-                        FIELD_NAME_NAME,
-                        FIELD_NAME_ALT_NAMES_BIG,
-                        FIELD_NAME_COMB2,
-                        FIELD_NAME_COMB3
+                        DocFactory.FIELD_NAME_NAME,
+                        DocFactory.FIELD_NAME_ALT_NAMES_BIG,
+                        DocFactory.FIELD_NAME_COMB2,
+                        DocFactory.FIELD_NAME_COMB3
                 },
                 analyzer,
                 boosts
@@ -144,7 +123,7 @@ public class TextSearcherLucene implements TextSearcher {
             q = queryParser.parse(String.format("\"%s\"", locationQuery));
             hitsArray = indexSearcher.search(q, numHits).scoreDocs;
 
-            // this has side effects - US states returned instead of cities in many cases
+            // this has some side effects...
             if(hitsArray.length == 0 && locationQuery.length() > 1){
                 // try again, with more broad criteria - without double quotes
                 q = queryParser.parse(locationQuery);
@@ -156,15 +135,18 @@ public class TextSearcherLucene implements TextSearcher {
             throw new IOException(e);
         }
 
-        List<Location> hits = new ArrayList<>(hitsArray.length);
+        List<Location> hitsList = new ArrayList<>(hitsArray.length);
         for (int i = 0; i < hitsArray.length; i++) {
-            hits.add(docFactory.createFromLuceneDocument(indexSearcher.doc(hitsArray[i].doc)));
+            hitsList.add(
+                docFactory.createFromLuceneDocument(
+                    indexSearcher.doc(hitsArray[i].doc)
+                )
+            );
         }
 
         return resultFilter.filter(
-                hits,
+                hitsList,
                 locationQuery,
-                null, // unused
                 count);
     }
 

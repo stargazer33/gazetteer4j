@@ -4,7 +4,7 @@ import com.remote4me.gazetteer4j.index.DefaultDocFactory;
 import com.remote4me.gazetteer4j.index.Location;
 import com.remote4me.gazetteer4j.query.AltNamesFilter;
 import com.remote4me.gazetteer4j.query.BuildIndexSearcher;
-import com.remote4me.gazetteer4j.query.TextSearcherLucene;
+import com.remote4me.gazetteer4j.query.DefaultTextSearcher;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.junit.Assert;
@@ -25,7 +25,7 @@ public class DoSearch {
 
     @Before
     public void setUp() throws IOException {
-        searcher = new TextSearcherLucene(
+        searcher = new DefaultTextSearcher(
             new BuildIndexSearcher().createSearcher(INDEX_CITIES_15000),
             new StandardAnalyzer(),
             new DefaultDocFactory(),
