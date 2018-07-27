@@ -1,9 +1,7 @@
 package com.remote4me.gazetteer4j.query;
 
-import com.remote4me.gazetteer4j.DefaultDocFactory;
-import com.remote4me.gazetteer4j.Location;
+import com.remote4me.gazetteer4j.index.Location;
 import com.remote4me.gazetteer4j.ResultFilter;
-import com.remote4me.gazetteer4j.index.GeonamesUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -68,18 +66,18 @@ public class AltNamesFilter implements ResultFilter {
                 // query contains candidate name
                 weight = WEIGHT_PART_MATCH;
             }
-            else if( GeonamesUtils.isAdm1(candidateLoc.getFeatureCombined()) &&
+            else if( candidateLoc.isAdm1(candidateLoc.getFeatureCombined()) &&
                             query.contains(candidateLoc.getAdmin1Code()) ){
                 // query contains ADM1 code
                 weight = WEIGHT_PART_MATCH;
             }
-            else if( GeonamesUtils.isCountry(candidateLoc.getFeatureCombined()) &&
+            else if( candidateLoc.isCountry(candidateLoc.getFeatureCombined()) &&
                     query.contains(candidateLoc.getCountryCode()) ){
                 // query contains country code
                 weight = WEIGHT_PART_MATCH;
             }
 
-            if( GeonamesUtils.isAdm1(candidateLoc.getFeatureCombined()) && i!=0 ){
+            if( candidateLoc.isAdm1(candidateLoc.getFeatureCombined()) && i!=0 ){
                 // downvote everything which looks like ADM1 NOT at first place
                 weight -= WEIGHT_FEATURE_ADM;
             }

@@ -1,5 +1,7 @@
 package com.remote4me.gazetteer4j;
 
+import com.remote4me.gazetteer4j.index.Location;
+
 import java.io.IOException;
 import java.util.List;
 

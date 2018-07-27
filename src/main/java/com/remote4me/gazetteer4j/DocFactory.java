@@ -1,5 +1,7 @@
 package com.remote4me.gazetteer4j;
 
+import com.remote4me.gazetteer4j.index.AlternateNameRecord;
+import com.remote4me.gazetteer4j.index.Location;
 import org.apache.lucene.document.Document;
 
 import java.io.IOException;

@@ -1,7 +1,5 @@
 package com.remote4me.gazetteer4j.index;
 
-import com.remote4me.gazetteer4j.AlternateNameRecord;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;

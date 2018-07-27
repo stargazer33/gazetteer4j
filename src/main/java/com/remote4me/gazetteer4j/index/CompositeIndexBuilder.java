@@ -1,7 +1,5 @@
 package com.remote4me.gazetteer4j.index;
 
-import com.remote4me.gazetteer4j.AlternateNameRecord;
-import com.remote4me.gazetteer4j.DefaultDocFactory;
 import com.remote4me.gazetteer4j.FileSystem;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 

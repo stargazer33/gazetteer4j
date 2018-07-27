@@ -1,6 +1,6 @@
 package com.remote4me.gazetteer4j.utils;
 
-import com.remote4me.gazetteer4j.Location;
+import com.remote4me.gazetteer4j.index.Location;
 import com.remote4me.gazetteer4j.TextSearcher;
 import com.remote4me.gazetteer4j.query.TextSearcherComposite;
 

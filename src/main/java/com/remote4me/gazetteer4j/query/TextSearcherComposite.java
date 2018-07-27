@@ -1,6 +1,8 @@
 package com.remote4me.gazetteer4j.query;
 
 import com.remote4me.gazetteer4j.*;
+import com.remote4me.gazetteer4j.index.DefaultDocFactory;
+import com.remote4me.gazetteer4j.index.Location;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryparser.classic.ParseException;
 

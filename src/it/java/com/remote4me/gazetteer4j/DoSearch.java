@@ -1,5 +1,7 @@
 package com.remote4me.gazetteer4j;
 
+import com.remote4me.gazetteer4j.index.DefaultDocFactory;
+import com.remote4me.gazetteer4j.index.Location;
 import com.remote4me.gazetteer4j.query.AltNamesFilter;
 import com.remote4me.gazetteer4j.query.TextSearcherLucene;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;

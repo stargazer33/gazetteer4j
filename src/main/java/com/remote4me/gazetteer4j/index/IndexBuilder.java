@@ -1,8 +1,6 @@
 package com.remote4me.gazetteer4j.index;
 
-import com.remote4me.gazetteer4j.AlternateNameRecord;
 import com.remote4me.gazetteer4j.DocFactory;
-import com.remote4me.gazetteer4j.Location;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
@@ -15,7 +13,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;

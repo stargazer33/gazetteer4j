@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.remote4me.gazetteer4j;
+package com.remote4me.gazetteer4j.index;
 
 import com.remote4me.gazetteer4j.index.GeonamesUtils;
 

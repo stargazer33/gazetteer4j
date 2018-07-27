@@ -1,6 +1,9 @@
-package com.remote4me.gazetteer4j;
+package com.remote4me.gazetteer4j.index;
 
+import com.remote4me.gazetteer4j.DocFactory;
+import com.remote4me.gazetteer4j.index.AlternateNameRecord;
 import com.remote4me.gazetteer4j.index.GeonamesUtils;
+import com.remote4me.gazetteer4j.index.Location;
 import com.remote4me.gazetteer4j.query.TextSearcherLucene;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;

@@ -1,4 +1,4 @@
-package com.remote4me.gazetteer4j;
+package com.remote4me.gazetteer4j.index;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * Created by dima2 on 27.07.18.
  */
-public class GeonamesUtils {
+class GeonamesUtils {
 
     /**
      *  see http://download.geonames.org/export/dump/featureCodes_en.txt
@@ -33,7 +33,7 @@ public class GeonamesUtils {
             "A.ADM1"
     ));
 
-    public static final Set FEATURES_CITIES_COUNTRIES_ADM1 = new HashSet();
+    static final Set FEATURES_CITIES_COUNTRIES_ADM1 = new HashSet();
     static {
         FEATURES_CITIES_COUNTRIES_ADM1.addAll(FEATURES_CITIES);
         FEATURES_CITIES_COUNTRIES_ADM1.addAll(FEATURES_COUNTRIES);

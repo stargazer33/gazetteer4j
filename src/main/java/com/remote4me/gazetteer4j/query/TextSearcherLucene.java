@@ -17,7 +17,7 @@
 
 package com.remote4me.gazetteer4j.query;
 
-import com.remote4me.gazetteer4j.Location;
+import com.remote4me.gazetteer4j.index.Location;
 import com.remote4me.gazetteer4j.DocFactory;
 import com.remote4me.gazetteer4j.ResultFilter;
 import com.remote4me.gazetteer4j.TextSearcher;
